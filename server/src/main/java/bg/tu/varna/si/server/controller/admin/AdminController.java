@@ -53,8 +53,8 @@ public class AdminController {
 	}
 
 	@DeleteMapping("/companies/{id}")
-	public ResponseEntity<?> deleteCompany(@PathVariable("id") long id) {
-		return (ResponseEntity<?>) ResponseEntity.noContent();
+	public ResponseEntity<Void> deleteCompany(@PathVariable("id") long id) {
+		return (ResponseEntity<Void>) ResponseEntity.noContent();
 	}
 
 	@GetMapping("/companies/{id}/users")
@@ -62,6 +62,7 @@ public class AdminController {
 
 		return ResponseEntity.ok().body(companyService.getAllEmployees(id));
 	}
+	
 
 	@PostMapping("/companies/{id}/users")
 	public ResponseEntity<Optional<User>> createEmployee(@PathVariable("id") long id, @RequestBody User user) {

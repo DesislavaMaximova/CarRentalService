@@ -2,7 +2,6 @@ package bg.tu_varna.si.rentacarapp;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,25 +10,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
-import com.android.volley.RequestQueue;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
 import bg.tu.varna.si.model.Company;
-import bg.tu.varna.si.model.CompanyList;
-import bg.tu_varna.si.rentacarapp.repositories.CompanyService;
+import bg.tu_varna.si.rentacarapp.activities.CompanyNew;
+import bg.tu_varna.si.rentacarapp.adapter.CompanyAdapter;
 import bg.tu_varna.si.rentacarapp.viewModels.CompanyViewModel;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AdministratorAllCompanies extends AppCompatActivity implements CompanyAdapter.OnItemClickListener {
     public static final String EXTRA_COMPANY_ID = "companyId";

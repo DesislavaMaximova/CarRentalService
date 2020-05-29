@@ -6,13 +6,15 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import bg.tu.varna.si.model.CompanyList;
-import bg.tu_varna.si.rentacarapp.RetrofitService;
+import bg.tu_varna.si.rentacarapp.service.JwtHandler;
+import bg.tu_varna.si.rentacarapp.service.RetrofitService;
+import bg.tu_varna.si.rentacarapp.service.AdminService;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CompanyRepository {
-    private CompanyService companyService;
+    private AdminService companyService;
     private static CompanyRepository companyRepository;
 
     public static CompanyRepository getInstance() {
@@ -23,12 +25,12 @@ public class CompanyRepository {
     }
 
     public CompanyRepository() {
-       companyService = RetrofitService.cteateService(CompanyService.class);
+       companyService = RetrofitService.cteateService(AdminService.class);
     }
 
     public LiveData<CompanyList> getCompanies() {
        MutableLiveData<CompanyList> companyListMutableLiveData = new MutableLiveData<>();
-        companyService.getAllCompanies().enqueue(new Callback<CompanyList>() {
+        companyService.getAllCompanies(JwtHandler.getJwt()).enqueue(new Callback<CompanyList>() {
             @Override
             public void onResponse(Call<CompanyList> call, Response<CompanyList> response) {
                 companyListMutableLiveData.setValue(response.body());
@@ -43,4 +45,5 @@ public class CompanyRepository {
 
         return companyListMutableLiveData;
     }
+
 }
