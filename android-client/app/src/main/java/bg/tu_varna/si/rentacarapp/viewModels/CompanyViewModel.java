@@ -18,6 +18,7 @@ public class CompanyViewModel extends ViewModel {
         companyRepository = CompanyRepository.getInstance();
         allCompaniesObservable = companyRepository.getCompanies();
     }
+
     public LiveData<CompanyList> getCompanyRepository() {
         return allCompaniesObservable;
     }

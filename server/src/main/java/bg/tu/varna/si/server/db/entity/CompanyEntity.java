@@ -3,6 +3,7 @@ package bg.tu.varna.si.server.db.entity;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,7 +20,7 @@ public class CompanyEntity {
 	
 	private String name;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	private List<UserEntity> employees;
 	
 	@OneToMany

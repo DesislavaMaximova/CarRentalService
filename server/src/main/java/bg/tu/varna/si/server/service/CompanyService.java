@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,9 @@ import javassist.NotFoundException;
 
 @Service
 public class CompanyService extends BaseService {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(CompanyService.class);
+	
 	@Autowired
 	CompanyRepository companyRepository;
 
@@ -107,6 +112,8 @@ public class CompanyService extends BaseService {
 			}
 
 			userList.setUsers(users);
+			
+			System.out.println(users.size());
 
 			return Optional.of(userList);
 		}
@@ -136,7 +143,7 @@ public class CompanyService extends BaseService {
 
 			employees.add(userEntity);
 			companyRepository.save(company);
-
+			
 			User returnUser = fromEntity(userEntity);
 			return Optional.of(returnUser);
 		}
@@ -163,4 +170,6 @@ public class CompanyService extends BaseService {
 		}
 		return Optional.empty();
 	}
+	
+	
 }

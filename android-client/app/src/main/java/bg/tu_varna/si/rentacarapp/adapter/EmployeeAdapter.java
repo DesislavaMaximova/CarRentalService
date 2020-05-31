@@ -14,23 +14,27 @@ import java.util.List;
 
 import bg.tu.varna.si.model.User;
 import bg.tu.varna.si.model.UserList;
+import bg.tu_varna.si.rentacarapp.CompanyEmployees;
 import bg.tu_varna.si.rentacarapp.R;
 
-public class EmployeeAdapter extends RecyclerView.Adapter <EmployeeAdapter.EmployeeHolder> {
+public class EmployeeAdapter extends RecyclerView.Adapter<EmployeeAdapter.EmployeeHolder> {
     private Context context;
-    private List<User> employees = new LinkedList<>();
+    private List<User> employees;
     private CompanyAdapter.OnItemClickListener onItemClickListener;
-    interface OnItemClickListener {
-        void onItemClick(int position);
-    }
- public void setOnItemClickListener (CompanyAdapter.OnItemClickListener onItemClickListener){
+
+
+    public void setOnItemClickListener(CompanyAdapter.OnItemClickListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
- }
+    }
+
     public EmployeeAdapter(Context context, List<User> employees) {
         this.context = context;
         this.employees = employees;
     }
-
+    public void updateEmployeeList(List<User> newEmployees) {
+        this.employees = newEmployees;
+        this.notifyDataSetChanged();
+    }
     @NonNull
     @Override
     public EmployeeHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -55,6 +59,8 @@ public class EmployeeAdapter extends RecyclerView.Adapter <EmployeeAdapter.Emplo
     public int getItemCount() {
         return employees.size();
     }
+
+
     public class EmployeeHolder extends RecyclerView.ViewHolder {
         public TextView textViewFirstName;
         public TextView textViewLastName;
@@ -63,14 +69,14 @@ public class EmployeeAdapter extends RecyclerView.Adapter <EmployeeAdapter.Emplo
         public EmployeeHolder(@NonNull View itemView) {
             super(itemView);
             textViewFirstName = itemView.findViewById(R.id.employee_first_name);
-            textViewLastName= itemView.findViewById(R.id.employee_last_name);
-            textViewEmail= itemView.findViewById(R.id.employee_email);
+            textViewLastName = itemView.findViewById(R.id.employee_last_name);
+            textViewEmail = itemView.findViewById(R.id.employee_email);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (onItemClickListener != null){
+                    if (onItemClickListener != null) {
                         int position = getAdapterPosition();
-                        if(position !=RecyclerView.NO_POSITION) {
+                        if (position != RecyclerView.NO_POSITION) {
                             onItemClickListener.onItemClick(position);
                         }
                     }

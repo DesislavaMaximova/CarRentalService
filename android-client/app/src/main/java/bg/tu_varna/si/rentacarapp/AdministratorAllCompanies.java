@@ -70,8 +70,6 @@ public class AdministratorAllCompanies extends AppCompatActivity implements Comp
             companyAdapter = new CompanyAdapter(AdministratorAllCompanies.this, companyList);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(companyAdapter);
-            // recyclerView.setItemAnimator(new DefaultItemAnimator());
-            //recyclerView.setNestedScrollingEnabled(true);
             companyAdapter.setOnItemClickListener(AdministratorAllCompanies.this);
         } else {
             companyAdapter.notifyDataSetChanged();

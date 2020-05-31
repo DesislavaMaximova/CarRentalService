@@ -22,7 +22,7 @@ public class CompanyAdapter extends RecyclerView.Adapter<CompanyAdapter.CompanyH
 
     private Context context;
 
-    private List<Company> companies = new LinkedList<>();
+    private List<Company> companies;
     private OnItemClickListener onItemClickListener;
 
     public interface OnItemClickListener {

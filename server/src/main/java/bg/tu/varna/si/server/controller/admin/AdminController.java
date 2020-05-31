@@ -2,6 +2,8 @@ package bg.tu.varna.si.server.controller.admin;
 
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -25,6 +27,9 @@ import javassist.NotFoundException;
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
+	
+	private static final Logger LOGGER = LoggerFactory.getLogger(AdminController.class);
+	
 	@Autowired
 	private UserService userService;
 
@@ -59,13 +64,19 @@ public class AdminController {
 
 	@GetMapping("/companies/{id}/users")
 	public ResponseEntity<Optional<UserList>> getAllEmployees(@PathVariable("id") long id) {
-
-		return ResponseEntity.ok().body(companyService.getAllEmployees(id));
+		Optional<UserList> allEmployees = companyService.getAllEmployees(id);
+		
+		LOGGER.info("Company {} Employees size: {}", id, allEmployees.get().getUsers().size());
+		
+		return ResponseEntity.ok().body(allEmployees);
 	}
 	
 
 	@PostMapping("/companies/{id}/users")
 	public ResponseEntity<Optional<User>> createEmployee(@PathVariable("id") long id, @RequestBody User user) {
+		
+		LOGGER.info("Creating user for company {} \n {}", id, user);
+		
 		return ResponseEntity.ok().body(companyService.createEmployee(id, user));
 	}
 
