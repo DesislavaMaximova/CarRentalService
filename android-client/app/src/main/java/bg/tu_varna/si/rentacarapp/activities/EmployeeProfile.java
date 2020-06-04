@@ -81,7 +81,8 @@ public class EmployeeProfile extends AppCompatActivity {
             fabCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    putEmployee();
+                    Log.d("Company ID: ", idCompany.toString());
+                    putEmployee(fillUser(), idCompany, idEmployee);
                     mHandler.postDelayed(mUpdateTimeTask, 1000);
                 }
             });
@@ -91,13 +92,7 @@ public class EmployeeProfile extends AppCompatActivity {
             fabCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    User user = new User(Role.OPERATOR);
-                    user.setFirstName(editTextFirstName.getText().toString());
-                    user.setLastName(editTextLastName.getText().toString());
-                    user.setUsername(editTextUsername.getText().toString());
-                    user.setPassword(editTextPassword.getText().toString());
-                    user.setEmail(editTextEmail.getText().toString());
-                    postEmployee(user);
+                    postEmployee(fillUser(), idCompany);
                     mHandler.postDelayed(mUpdateTimeTask, 1000);
                 }
             });
@@ -114,18 +109,14 @@ public class EmployeeProfile extends AppCompatActivity {
     }
 
 
-    private void postEmployee(User user) {
+    private void postEmployee(User user, long idCompany) {
 
         Call<User> call = adminService.createEmployee(JwtHandler.getJwt(), idCompany, user);
+        Log.d("User: ", user.toString());
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 Toast.makeText(EmployeeProfile.this, "Employee profile created!", Toast.LENGTH_LONG).show();
-                user.setFirstName(response.body().getFirstName());
-                user.setLastName(response.body().getLastName());
-                user.setUsername(response.body().getUsername());
-                user.setPassword(response.body().getPassword());
-                user.setEmail(response.body().getEmail());
             }
 
             @Override
@@ -135,6 +126,7 @@ public class EmployeeProfile extends AppCompatActivity {
         });
 
     }
+
     private Runnable mUpdateTimeTask = new Runnable() {
         public void run() {
             Intent intent = new Intent(EmployeeProfile.this, CompanyEmployees.class);
@@ -142,24 +134,17 @@ public class EmployeeProfile extends AppCompatActivity {
             startActivity(intent);
         }
     };
-    private void putEmployee() {
-        Call<User> call = adminService.getUser(JwtHandler.getJwt(), idEmployee);
+
+    private void putEmployee(User user, long companyId, long employeeId) {
+        Call<User> call = adminService.udapateEmployee(JwtHandler.getJwt(),companyId, employeeId, user);
+        Log.d("companyId: ", idCompany.toString());
+        Log.d("employeeId: ", idEmployee.toString());
+        Log.d("User: ", user.toString());
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, retrofit2.Response<User> response) {
                 if (response.isSuccessful()) {
                     Log.d("Response", response.message().toString());
-                    User user = new User(Role.OPERATOR);
-                    user.setFirstName(response.body().getFirstName());
-                    user.setLastName(response.body().getLastName());
-                    user.setUsername(response.body().getUsername());
-                    user.setPassword(response.body().getPassword());
-                    user.setEmail(response.body().getEmail());
-                    editTextFirstName.setText(user.getFirstName());
-                    editTextLastName.setText(user.getLastName());
-                    editTextEmail.setText(user.getEmail());
-                    editTextUsername.setText(user.getUsername());
-                    editTextPassword.setText(user.getPassword());
 
                 } else {
                     Toast.makeText(EmployeeProfile.this, "Employee's profile can't be loaded", Toast.LENGTH_LONG).show();
@@ -190,6 +175,17 @@ public class EmployeeProfile extends AppCompatActivity {
 
             }
         });
+    }
+
+    private User fillUser() {
+        User user = new User(Role.OPERATOR);
+        user.setFirstName(editTextFirstName.getText().toString());
+        user.setLastName(editTextLastName.getText().toString());
+        user.setUsername(editTextUsername.getText().toString());
+        user.setPassword(editTextPassword.getText().toString());
+        user.setEmail(editTextEmail.getText().toString());
+        return user;
+
     }
 }
 

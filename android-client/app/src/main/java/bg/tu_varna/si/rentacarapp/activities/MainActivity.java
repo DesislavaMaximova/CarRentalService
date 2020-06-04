@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "String Response : " + response.toString(), Toast.LENGTH_LONG).show();
 
                 Log.d("JSON", String.valueOf(response));
-                Intent intent = new Intent(MainActivity.this, Operator_main.class);
+                Intent intent = new Intent(MainActivity.this, OperatorMain.class);
 
                 startActivity(intent);
 

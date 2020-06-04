@@ -39,8 +39,8 @@ public interface AdminService {
     Call<User> getUser(@Header("Authorization") String bearerToken,
                        @Path("userId") long idEmployee);
 
-    @PUT("/admin/companies/{compantId}/users/{userId}")
-    Call<User> udpateEmployee(@Header("Authorization") String bearerToken, @Path("companyId") long idCompany,
+    @PUT("/admin/companies/{companyId}/users/{userId}")
+    Call<User> udapateEmployee(@Header("Authorization") String bearerToken, @Path("companyId") long idCompany,
                               @Path("userId") long idEmployee,
                               @Body User user);
 

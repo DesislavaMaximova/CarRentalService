@@ -42,8 +42,8 @@ public class LogIn extends AppCompatActivity {
         password = findViewById(R.id.edit_pass);
 
 
-         username.setText("admin");
-        password.setText("admin");
+         username.setText("filip");
+        password.setText("filip");
 
         login.setOnClickListener(v -> {
             try {

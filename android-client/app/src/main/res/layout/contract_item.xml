@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+android:id="@+id/id_item"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:layout_marginStart="8dp"
+android:layout_marginTop="8dp"
+android:layout_marginEnd="8dp"
+app:cardCornerRadius="20dp">
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/contract_number_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Contract number"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/contract_number_view"
+            android:layout_marginEnd="-198dp"
+            android:text="Start date: "
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/client_name_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/contract_number_view"
+            android:layout_marginTop="9dp"
+            android:text="Client name: "
+            android:textSize="20sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/car_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/contract_number_view"
+            android:layout_marginStart="139dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/client_name_text"
+            android:text="Car registration number:"
+            android:textSize="15sp"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/fleet_count_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/car_text"
+            android:layout_alignParentEnd="true"
+            android:layout_marginTop="18dp"
+            android:layout_marginEnd="63dp"
+            android:text="End date: "
+            android:textSize="15sp"
+            android:textStyle="italic" />
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

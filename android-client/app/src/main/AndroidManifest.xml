@@ -11,6 +11,13 @@
         android:roundIcon="@drawable/ic_rentacar_89116"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activities.ContractNew"></activity>
+        <activity android:name=".activities.CarNew" />
+        <activity android:name=".activities.Client_new" />
+        <activity android:name=".Queries" />
+        <activity android:name=".Cars" />
+        <activity android:name=".Clients" />
+        <activity android:name=".Contracts" />
         <activity android:name=".activities.LogIn">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,10 +26,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".CompanyEmployees" />
-        <activity android:name=".activities.CompanyNew"/>
-        <activity android:name=".activities.EmployeeProfile"/>
-        <activity android:name=".AdministratorAllCompanies"/>
-        <activity android:name=".activities.OperatorMain"/>
+        <activity android:name=".activities.CompanyNew" />
+        <activity android:name=".activities.EmployeeProfile" />
+        <activity android:name=".AdministratorAllCompanies" />
+        <activity android:name=".activities.OperatorMain" />
     </application>
 
 </manifest>
