@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import bg.tu.varna.si.model.Car;
 import bg.tu.varna.si.model.CompanyList;
 import bg.tu_varna.si.rentacarapp.service.JwtHandler;
 import bg.tu_varna.si.rentacarapp.service.RetrofitService;

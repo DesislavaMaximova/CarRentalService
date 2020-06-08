@@ -22,8 +22,8 @@ public class CarService extends BaseService {
 	@Autowired
 	private CompanyRepository companyRepository;
 
-
 	public Optional<CarList> getAllCars(long id) {
+
 		Optional<CompanyEntity> companyEntity = companyRepository.findById(id);
 
 		if (companyEntity.isPresent()) {
@@ -42,11 +42,15 @@ public class CarService extends BaseService {
 
 		return Optional.empty();
 	}
+
 	public Optional<Car> createCar(long id, Car car) {
+
 		Optional<CompanyEntity> companyEntity = companyRepository.findById(id);
+
 		CarEntity entity = carRepository.findByRegNumber(car.getRegNumber());
 		if (companyEntity.isPresent() && entity == null) {
 			CarEntity carEntity = new CarEntity();
+			carEntity.setCompanyId(car.getCompanyId());
 			carEntity.setRegNumber(car.getRegNumber());
 			carEntity.setBrand(car.getBrand());
 			carEntity.setCategory(car.getCategory());
@@ -55,6 +59,7 @@ public class CarService extends BaseService {
 			carEntity.setType(car.getType());
 			carEntity.setPriceForDay(car.getPriceForDay());
 			carEntity.setKilometrage(car.getKilometrage());
+			carEntity.setAvailable(car.isAvailable());
 			carRepository.save(carEntity);
 
 			CompanyEntity company = companyEntity.get();
@@ -72,9 +77,7 @@ public class CarService extends BaseService {
 
 		return Optional.empty();
 	}
-	
-	
-	
+
 	public Optional<Car> getByID(Long id) {
 
 		Optional<CarEntity> entity = carRepository.findById(id);
@@ -86,12 +89,12 @@ public class CarService extends BaseService {
 		return Optional.of(fromEntity(carEntity));
 	}
 
-	public Optional<Car> updateEmployee(long idCompany, long idCar, Car car) {
+	public Optional<Car> updateCar(long idCompany, long idCar, Car car) {
 		Optional<CompanyEntity> companyEntity = companyRepository.findById(idCompany);
 		Optional<CarEntity> carEntity = carRepository.findById(idCar);
 
 		if (companyEntity.isPresent() && carEntity.isPresent()) {
-			
+
 			carEntity.get().setRegNumber(car.getRegNumber());
 			carEntity.get().setBrand(car.getBrand());
 			carEntity.get().setCategory(car.getCategory());
@@ -100,7 +103,7 @@ public class CarService extends BaseService {
 			carEntity.get().setKilometrage(car.getKilometrage());
 			carEntity.get().setPriceForDay(car.getPriceForDay());
 			carEntity.get().setType(car.getType());
-		
+			carEntity.get().setAvailable(car.isAvailable());
 
 			carRepository.save(carEntity.get());
 
@@ -109,7 +112,6 @@ public class CarService extends BaseService {
 		}
 		return Optional.empty();
 	}
-
 
 	public void deleteCarEntity(Long id) {
 

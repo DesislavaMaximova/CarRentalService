@@ -23,8 +23,14 @@ public class CompanyEntity {
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<UserEntity> employees;
 	
-	@OneToMany
+	@OneToMany(fetch = FetchType.LAZY)
 	private List<CarEntity> cars;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<ClientEntity> clients;
+	
+	@OneToMany(fetch = FetchType.LAZY)
+	private List<ContractEntity> contracts;
 
 	public long getId() {
 		return id;
@@ -56,6 +62,22 @@ public class CompanyEntity {
 
 	public void setCars(List<CarEntity> cars) {
 		this.cars = cars;
+	}
+
+	public List<ClientEntity> getClients() {
+		return clients;
+	}
+
+	public void setClients(List<ClientEntity> clients) {
+		this.clients = clients;
+	}
+
+	public List<ContractEntity> getContracts() {
+		return contracts;
+	}
+
+	public void setContracts(List<ContractEntity> contracts) {
+		this.contracts = contracts;
 	}
 
 }

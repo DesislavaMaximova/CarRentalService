@@ -12,6 +12,10 @@ public class Company {
 	
 	private List<Car> cars;
 	
+	private List<Client> clients;
+	
+	private List <Contract> contracts;
+	
 	public Company() {}
 	
 	public Company(String name, List<User> employees, List<Car> cars) {
@@ -55,6 +59,22 @@ public class Company {
 
 	public void setCars(List<Car> cars) {
 		this.cars = cars;
+	}
+
+	public List<Client> getClients() {
+		return clients;
+	}
+
+	public void setClients(List<Client> clients) {
+		this.clients = clients;
+	}
+
+	public List<Contract> getContracts() {
+		return contracts;
+	}
+
+	public void setContracts(List<Contract> contracts) {
+		this.contracts = contracts;
 	}
 
 }

@@ -8,10 +8,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 
+import bg.tu.varna.si.model.CompanyList;
 import bg.tu.varna.si.model.User;
 import bg.tu.varna.si.model.UserList;
 import bg.tu.varna.si.model.UserRequest;
+import bg.tu.varna.si.server.db.entity.CompanyEntity;
 import bg.tu.varna.si.server.db.entity.UserEntity;
+import bg.tu.varna.si.server.repository.CompanyRepository;
 import bg.tu.varna.si.server.repository.UserRepository;
 import javassist.NotFoundException;
 
@@ -20,6 +23,8 @@ public class UserService {
 
 	@Autowired
 	UserRepository userRepository;
+	@Autowired
+	CompanyRepository companyRepository;
 
 	private User fromEntity(UserEntity userEntity) {
 		
@@ -30,10 +35,14 @@ public class UserService {
 		user.setUsername(userEntity.getUsername());
 		user.setPassword(userEntity.getPassword());
 		user.setEmail(userEntity.getEmail());
+		user.setCompanyId(userEntity.getCompanyId());
 		
 		return user;
 	}
+	
 
+
+	
 	public UserList getAllUsers() {
 
 		List<UserEntity> userEntities = userRepository.findAll();
@@ -53,6 +62,7 @@ public class UserService {
 		User user = fromEntity(entity);
 		return Optional.of(user);
 	}
+	
 
 	public User createUser(UserRequest userReg) {
 		UserEntity entity = userRepository.findByUsername(userReg.getAuth().getUsername());
@@ -66,6 +76,7 @@ public class UserService {
 		userEntity.setLastName(userReg.getUser().getLastName());
 		userEntity.setEmail(userReg.getUser().getEmail());
 		userEntity.setRole(userReg.getUser().getRole());
+		userEntity.setCompanyId(userReg.getUser().getCompanyId());
 
 		userRepository.save(userEntity);
 		User user = fromEntity(userEntity);
@@ -86,6 +97,7 @@ public class UserService {
 		entity.setLastName(userRequest.getUser().getLastName());
 		entity.setEmail(userRequest.getUser().getEmail());
 		entity.setRole(userRequest.getUser().getRole());
+		entity.setCompanyId(userRequest.getUser().getCompanyId());
 
 		userRepository.save(entity);
 		User user = fromEntity(entity);

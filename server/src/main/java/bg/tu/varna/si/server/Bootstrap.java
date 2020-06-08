@@ -31,8 +31,9 @@ public class Bootstrap implements CommandLineRunner {
 //		entity.setRole(Role.ADMINISTRATOR);
 //		
 //		repository.save(entity);
-//		
+////		
 //		UserEntity operator = new UserEntity();
+//		operator.setCompanyId(1);
 //		operator.setEmail("operator@operator.com");
 //		operator.setFirstName("Operator");
 //		operator.setLastName("Operatorov");
@@ -41,7 +42,7 @@ public class Bootstrap implements CommandLineRunner {
 //		operator.setRole(Role.OPERATOR);
 //		
 //		repository.save(operator);
-		
+//		
 	}
 
 }

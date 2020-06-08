@@ -19,11 +19,11 @@ import bg.tu.varna.si.server.db.entity.UserEntity;
 public abstract class BaseService {
 
 	protected Company fromEntity(CompanyEntity entity) {
-		
+
 		Company company = new Company();
 		company.setId(entity.getId());
 		company.setName(entity.getName());
-		
+
 		List<UserEntity> employeeEntities = entity.getEmployees();
 		if (employeeEntities != null) {
 			List<User> employees = new LinkedList<>();
@@ -33,7 +33,7 @@ public abstract class BaseService {
 			}
 			company.setEmployees(employees);
 		}
-		
+
 		List<CarEntity> carEntities = entity.getCars();
 		if (carEntities != null) {
 			List<Car> cars = new LinkedList<>();
@@ -43,12 +43,13 @@ public abstract class BaseService {
 			}
 			company.setCars(cars);
 		}
-		
+
 		return company;
 	}
 
 	protected Car fromEntity(CarEntity entity) {
 		Car car = new Car();
+		car.setCarId(entity.getId());
 		car.setBrand(entity.getBrand());
 		car.setCategory(entity.getCategory());
 		car.setForSmokers(entity.getForSmokers());
@@ -57,17 +58,21 @@ public abstract class BaseService {
 		car.setPriceForDay(entity.getPriceForDay());
 		car.setRegNumber(entity.getRegNumber());
 		car.setType(entity.getType());
-		
+
 		return car;
 	}
 
-	protected Contract fromEntity(ContractEntity contractEntity) {
+	protected Contract fromEntity(ContractEntity entity) {
+		Contract contract = new Contract();
+		contract.setCar(fromEntity(entity.getCar()));
+		contract.setClient(fromEntity(entity.getClient()));
+		contract.setOperator(fromEntity(entity.getOperator()));
+		contract.setStart(entity.getStart());
+		contract.setEnd(entity.getEnd());
+		contract.setStatusOnStart(fromEntity(entity.getStatusOnStart()));
+		contract.setStatusOnEnd(fromEntity(entity.getStatusOnEnd()));
 
-		return new Contract(fromEntity(contractEntity.getOperator()), fromEntity(contractEntity.getClient()),
-				fromEntity(contractEntity.getCar()), contractEntity.getStart(),
-				fromEntity(contractEntity.getStatusOnStart()), contractEntity.getEnd(),
-				fromEntity(contractEntity.getStatusOnEnd()));
-
+		return contract;
 	}
 
 	protected User fromEntity(UserEntity entity) {
@@ -79,14 +84,14 @@ public abstract class BaseService {
 			user.setFirstName(firstName);
 		}
 		String lastName = entity.getLastName();
-		if(lastName != null) {
+		if (lastName != null) {
 			user.setLastName(lastName);
 		}
 		String email = entity.getEmail();
-		if(email != null) {
+		if (email != null) {
 			user.setEmail(email);
 		}
-		
+
 		return user;
 	}
 
@@ -95,9 +100,16 @@ public abstract class BaseService {
 	}
 
 	private Client fromEntity(ClientEntity entity) {
-		return new Client(entity.getUsername(), entity.getFirstName(), entity.getLastName(), entity.getEmail(), entity.getRole(),
-				entity.getRating(), entity.getTelephone(), entity.getDriversLicense());
+		Client client = new Client();
+		client.setFirstName(entity.getFirstName());
+		client.setLastName(entity.getLastName());
+		client.setDriversLicense(entity.getDriversLicense());
+		client.setEmail(entity.getEmail());
+		client.setTelephone(entity.getTelephone());
+		client.setCompanyId(entity.getCompanyId());
+		client.setRating(entity.getRating());
+		
+		return client;
 	}
-
 
 }

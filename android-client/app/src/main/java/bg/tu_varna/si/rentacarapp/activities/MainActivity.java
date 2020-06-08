@@ -1,6 +1,5 @@
 package bg.tu_varna.si.rentacarapp.activities;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -12,85 +11,84 @@ import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import bg.tu.varna.si.model.auth.AuthenticationRequest;
+import bg.tu.varna.si.model.auth.AuthenticationResponse;
+import bg.tu_varna.si.rentacarapp.AdministratorAllCompanies;
+import bg.tu_varna.si.rentacarapp.CompanyEmployees;
+import bg.tu_varna.si.rentacarapp.Constants;
 import bg.tu_varna.si.rentacarapp.R;
+import bg.tu_varna.si.rentacarapp.service.AuthService;
+import bg.tu_varna.si.rentacarapp.service.CompanyId;
+import bg.tu_varna.si.rentacarapp.service.JwtHandler;
+import bg.tu_varna.si.rentacarapp.service.RetrofitService;
 import bg.tu_varna.si.rentacarapp.service.VolleySingelton;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    private EditText username;
-    private EditText password;
+    public static final String EXTRA_COMPANY_ID = "companyId";
+    private EditText editUsername;
+    private EditText editPassword;
     private Button login;
-    AlertDialog.Builder builder;
-    RequestQueue requestQueue;
-    String url = "http://192.168.100.3:8080/auth/login";
+    AuthService authService;
+    private AuthenticationRequest credentials;
+    long idCompany;
+    Intent intent;
+    String username;
+    String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         login = findViewById(R.id.button_submit);
-        username= findViewById(R.id.edit_username);
-        password= findViewById(R.id.edit_pass);
-        builder = new AlertDialog.Builder(this);
+        editUsername = findViewById(R.id.edit_username);
+        editPassword = findViewById(R.id.edit_pass);
+//        username.setText("");
+//        password.setText("");
 
-        username.setText("admin");
-        password.setText("admin");
 
         login.setOnClickListener(v -> {
-            try {
-                login();
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        });
+            credentials = new AuthenticationRequest();
+            credentials.setUsername(editUsername.getText().toString());
+            Log.d("Username: ", editUsername.getText().toString());
+            credentials.setPassword(editPassword.getText().toString());
+            authService = RetrofitService.cteateService(AuthService.class);
 
-    }
-
-
-    private void login() throws JSONException {
-
-        JSONObject object = new JSONObject();
-        object.put("username", username.getText().toString());
-        object.put("password", password.getText().toString());
-
-
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, object, new Response.Listener<JSONObject>() {
-
-            @Override
-            public void onResponse(JSONObject response) {
-                try {
-                    String jwt = response.getString("jwt");
-                } catch (JSONException e) {
-                    e.printStackTrace();
+            Call<AuthenticationResponse> call = authService.login(credentials);
+            call.enqueue(new Callback<AuthenticationResponse>() {
+                @Override
+                public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
+                    Log.d("Response", String.valueOf(response.code()));
+                    JwtHandler.setJwt(response.body().getJwt());
+                    CompanyId.setCompanyId(response.body().getCompanyId());
+                    Log.d("Role: ", response.body().getRole().toString());
+                    Toast.makeText(MainActivity.this, "Welcome : " + response.body().getUsername(), Toast.LENGTH_LONG).show();
+                    if (response.body().getRole().equals("ADMINISTRATOR")) {
+                        Intent intent = new Intent(MainActivity.this, AdministratorAllCompanies.class);
+                        startActivity(intent);
+                    } else if (response.body().getRole().equals("OPERATOR")) {
+                        Intent intent = new Intent(MainActivity.this, OperatorMain.class);
+                        startActivity(intent);
+                    }
                 }
 
-                Toast.makeText(MainActivity.this, "String Response : " + response.toString(), Toast.LENGTH_LONG).show();
-
-                Log.d("JSON", String.valueOf(response));
-                Intent intent = new Intent(MainActivity.this, OperatorMain.class);
-
-                startActivity(intent);
-
-
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                error.printStackTrace();
-            }
+                @Override
+                public void onFailure(Call<AuthenticationResponse> call, Throwable t) {
+                    Toast.makeText(MainActivity.this, "Unable to log in: " + t.getMessage().toString(), Toast.LENGTH_LONG).show();
+                }
+            });
         });
 
-
-        requestQueue = VolleySingelton.getInstance(this).getRequestQueue();
-        requestQueue.add(request);
     }
+
+
 }
-
-
-

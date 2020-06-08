@@ -2,6 +2,8 @@ package bg.tu_varna.si.rentacarapp.service;
 
 import bg.tu.varna.si.model.Car;
 import bg.tu.varna.si.model.CarList;
+import bg.tu.varna.si.model.Client;
+import bg.tu.varna.si.model.ClientList;
 import bg.tu.varna.si.model.Contract;
 import bg.tu.varna.si.model.ContractList;
 import retrofit2.Call;
@@ -17,8 +19,9 @@ public interface ApiService {
     @GET("/api/{companyId}/cars")
     Call<CarList> getAllCars(@Header("Authorization") String bearerToken, @Path("companyId") long companyId);
 
-    @POST("/api/{companyId/cars}")
-    Call<Car> createCar(@Header("Authorization") String bearerToken, @Path("companyId") long companyId);
+    @POST("/api/{companyId}/cars")
+    Call<Car> createCar(@Header("Authorization") String bearerToken,
+                        @Path("companyId") long companyId, @Body Car car);
 
     @GET("/api/{companyId}/cars/{carId}")
     Call<Car> getCar(@Header("Authorization") String bearerToken, @Path("companyId") long companyId,
@@ -28,21 +31,24 @@ public interface ApiService {
     Call<Car> updateCar(@Header("Authorization") String bearerToken, @Path("companyId") long companyId,
                         @Path("carId") long carId,
                         @Body Car car);
+
     @DELETE("/api/{companyId}/cars/{carID}")
     Call<Void> deleteCar(@Header("Authorization") String bearerToken, @Path("companyId") long companyId,
-                        @Path("carId") long carId);
+                         @Path("carId") long carId);
 
     @GET("/api/{companyId}/contracts")
     Call<ContractList> getAllContracts(@Header("Authorization") String bearerToken, @Path("companyId") long companyId);
 
-    @GET ("/api/{companyId}/contracts/{contractId}")
-    Call<Contract> getAllContracts(@Header("Authorization") String bearerToken, @Path("companyId") long companyId,
+    @GET("/api/{companyId}/contracts/{contractId}")
+    Call<Contract> getContract(@Header("Authorization") String bearerToken, @Path("companyId") long companyId,
                                    @Path("contractId") long contractId);
 
-    @POST ("/api/{companyId}/contracts")
-    Call <Contract> createContract(@Header("Authorization") String bearerToken, @Path("companyId") long companyId);
+    @POST("/api/{companyId}/contracts")
+    Call<Contract> createContract(@Header("Authorization") String bearerToken,
+                                  @Path("companyId") long companyId,
+                                  @Body Contract contract);
 
-    @PUT ("/api/{companyId}/contracts/{contractId}")
+    @PUT("/api/{companyId}/contracts/{contractId}")
     Call<Contract> updateContract(@Header("Authorization") String bearerToken, @Path("companyId") long companyId,
                                   @Path("contractId") long contractId,
                                   @Body Contract contract);
@@ -52,5 +58,24 @@ public interface ApiService {
                               @Path("contractId") long contractId);
 
 
+    @GET("/api/{companyId}/clients")
+    Call<ClientList> getAllClients(@Header("Authorization") String bearerToken,
+                                   @Path("companyId") long companyId);
+
+    @GET("/api/{companyId}/clients/{clientId}")
+    Call<Client> getClient(@Header("Authorization") String bearerToken,
+                           @Path("companyId") long companyId,
+                           @Path("clientId") long clientId);
+
+    @POST("/api/{companyId}/clients")
+    Call<Client> createClient(@Header("Authorization") String bearerToken,
+                              @Path("companyId") long companyId,
+                              @Body Client client);
+
+    @PUT("/api/{companyId}/client/{clientId}")
+    Call<Client> updateClient(@Header("Authorization") String bearerToken,
+                              @Path("companyId") long companyId,
+                              @Path("clientId") long clientId,
+                              @Body Client client);
 
 }

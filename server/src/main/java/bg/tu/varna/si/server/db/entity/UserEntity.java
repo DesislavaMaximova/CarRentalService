@@ -28,6 +28,8 @@ public class UserEntity {
 	
 	private String email;
 	
+	private long companyId;
+	
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
@@ -87,6 +89,14 @@ public class UserEntity {
 		this.role = role;
 	}
 
+	public long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -102,10 +112,17 @@ public class UserEntity {
 		builder.append(lastName);
 		builder.append(", email=");
 		builder.append(email);
+		builder.append(", companyId=");
+		builder.append(companyId);
 		builder.append(", role=");
 		builder.append(role);
 		builder.append("]");
 		return builder.toString();
 	}
+
+
+
+
+	
 
 }

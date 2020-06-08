@@ -78,7 +78,7 @@ public class CompanyEmployees extends AppCompatActivity implements CompanyAdapte
             employeesRecycleView.setNestedScrollingEnabled(true);
             employeeAdapter.setOnItemClickListener(CompanyEmployees.this);
         } else {
-           employeeAdapter.notifyDataSetChanged();
+            employeeAdapter.notifyDataSetChanged();
         }
     }
 

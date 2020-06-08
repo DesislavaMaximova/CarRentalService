@@ -14,6 +14,8 @@ public class User {
 	private String email;
 
 	private Role role;
+	
+	private long companyId;
 
 	public User() {
 
@@ -77,9 +79,19 @@ public class User {
 		return role;
 	}
 
-	@Override
-	public String toString() {
-		return "User [firstName=" + firstName + ", lastName=" + lastName + ", email=" + email + ", role=" + role + "]";
+	public long getCompanyId() {
+		return companyId;
 	}
 
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", firstName=" + firstName
+				+ ", lastName=" + lastName + ", email=" + email + ", role=" + role + ", companyId=" + companyId + "]";
+	}
+
+	
 }

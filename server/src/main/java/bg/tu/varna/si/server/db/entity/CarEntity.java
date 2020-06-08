@@ -32,6 +32,11 @@ public class CarEntity {
 	private String image;
 	
 	private double kilometrage;
+	
+	private boolean available;
+	
+	private long companyId;
+	
 
 	public Long getId() {
 		return id;
@@ -103,6 +108,51 @@ public class CarEntity {
 
 	public void setKilometrage(double kilometrage) {
 		this.kilometrage = kilometrage;
+	}
+
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+
+	public long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("CarEntity [id=");
+		builder.append(id);
+		builder.append(", regNumber=");
+		builder.append(regNumber);
+		builder.append(", brand=");
+		builder.append(brand);
+		builder.append(", type=");
+		builder.append(type);
+		builder.append(", priceForDay=");
+		builder.append(priceForDay);
+		builder.append(", forSmokers=");
+		builder.append(forSmokers);
+		builder.append(", category=");
+		builder.append(category);
+		builder.append(", image=");
+		builder.append(image);
+		builder.append(", kilometrage=");
+		builder.append(kilometrage);
+		builder.append(", available=");
+		builder.append(available);
+		builder.append(", companyId=");
+		builder.append(companyId);
+		builder.append("]");
+		return builder.toString();
 	}
 	
 

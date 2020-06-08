@@ -3,9 +3,13 @@ package bg.tu.varna.si.model;
 public class Client extends User {
 	
 	
-	private int rating;
+	private float rating;
 	private String telephone;
 	private String driversLicense;
+	
+	public Client() {
+		super(Role.CLIENT);
+	}
 	
 	public Client(String username, String firstName, String lastName, String email, Role role, int rating, String telephone, String driversLicense) {
 		super(Role.CLIENT);
@@ -16,11 +20,11 @@ public class Client extends User {
 		
 	}
 
-	public int getRating() {
+	public float getRating() {
 		return rating;
 	}
 
-	public void setRating(int rating) {
+	public void setRating(float rating) {
 		this.rating = rating;
 	}
 

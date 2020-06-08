@@ -18,13 +18,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import bg.tu.varna.si.model.auth.AuthenticationRequest;
 import bg.tu.varna.si.model.auth.AuthenticationResponse;
+import bg.tu.varna.si.server.db.entity.UserEntity;
+import bg.tu.varna.si.server.repository.UserRepository;
 import bg.tu.varna.si.server.service.DatabaseUserDetailsService;
 import bg.tu.varna.si.server.service.JwtService;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthorizationController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(AuthorizationController.class);
 
 	@Autowired
@@ -36,21 +38,27 @@ public class AuthorizationController {
 	@Autowired
 	private JwtService jwtService;
 
+	@Autowired
+	private UserRepository userRepository;
+
 	@PostMapping("/login")
 	public ResponseEntity<AuthenticationResponse> login(@RequestBody AuthenticationRequest credentials)
 			throws Exception {
 		
-		LOGGER.debug("Authenticating user: {}", credentials.getUsername());
+		
+		LOGGER.info ("Authenticating user: {}", credentials.getUsername());
 
 		authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword()));
-
+		
 		UserDetails userDetails = userDetailsService.loadUserByUsername(credentials.getUsername());
 		String jwt = jwtService.generateToken(userDetails);
 		String username = credentials.getUsername();
+		UserEntity user = userRepository.findByUsername(username);
+		long companyId = user.getCompanyId();
 		List<GrantedAuthority> list = new LinkedList<>(userDetails.getAuthorities());
 		String role = list.get(0).getAuthority();
-		return ResponseEntity.ok(new AuthenticationResponse(jwt, username, role));
+		return ResponseEntity.ok(new AuthenticationResponse(jwt, username, role, companyId));
 	}
 
 }

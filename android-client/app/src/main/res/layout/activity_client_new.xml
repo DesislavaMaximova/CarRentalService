@@ -55,13 +55,14 @@
         android:layout_marginTop="10dp"
         android:numStars="5"
         android:stepSize="1" />
+
     <TextView
         android:id="@+id/client_rating_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:text="Awesome. I love it"
+        android:text="Awesome"
         android:textSize="16sp"
         android:textStyle="bold" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton

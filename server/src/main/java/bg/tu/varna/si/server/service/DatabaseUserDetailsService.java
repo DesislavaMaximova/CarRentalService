@@ -30,7 +30,8 @@ public class DatabaseUserDetailsService implements UserDetailsService {
 			throw new UsernameNotFoundException("Username [" + userName + "] not found");
 		}
 
-		return new User(userEntity.getUsername(), userEntity.getPassword(), getAuthorities(userEntity));
+		return new User(userEntity.getUsername(), userEntity.getPassword(), 
+				 getAuthorities(userEntity));
 	}
 
 	private Collection<GrantedAuthority> getAuthorities(UserEntity user) {

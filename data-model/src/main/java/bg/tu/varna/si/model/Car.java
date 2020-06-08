@@ -1,6 +1,7 @@
 package bg.tu.varna.si.model;
 
 public class Car {
+	private long carId;
 	
 	private String regNumber;
 	
@@ -18,10 +19,26 @@ public class Car {
 	
 	private double kilometrage;
 	
+	private boolean available;
+	
+	private long companyId;
+	
 	
 
 	public Car() {
 	
+	}
+
+
+
+	public long getCarId() {
+		return carId;
+	}
+
+
+
+	public void setCarId(long carId) {
+		this.carId = carId;
 	}
 
 
@@ -119,6 +136,64 @@ public class Car {
 	public void setKilometrage(double kilometrage) {
 		this.kilometrage = kilometrage;
 	}
+
+
+
+	public boolean isAvailable() {
+		return available;
+	}
+
+
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+
+
+
+	public long getCompanyId() {
+		return companyId;
+	}
+
+
+
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
+
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Car [regNumber=");
+		builder.append(regNumber);
+		builder.append(", brand=");
+		builder.append(brand);
+		builder.append(", type=");
+		builder.append(type);
+		builder.append(", priceForDay=");
+		builder.append(priceForDay);
+		builder.append(", forSmokers=");
+		builder.append(forSmokers);
+		builder.append(", category=");
+		builder.append(category);
+		builder.append(", image=");
+		builder.append(image);
+		builder.append(", kilometrage=");
+		builder.append(kilometrage);
+		builder.append(", available=");
+		builder.append(available);
+		builder.append(", companyId=");
+		builder.append(companyId);
+		builder.append("]");
+		return builder.toString();
+	}
+
+
+
+
+
 
 	
 

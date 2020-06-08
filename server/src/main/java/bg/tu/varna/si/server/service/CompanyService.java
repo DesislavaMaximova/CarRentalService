@@ -48,6 +48,7 @@ public class CompanyService extends BaseService {
 
 		return companies;
 	}
+	
 
 	public Optional<Company> getByID(Long id) {
 

@@ -18,13 +18,14 @@
         <activity android:name=".Cars" />
         <activity android:name=".Clients" />
         <activity android:name=".Contracts" />
-        <activity android:name=".activities.LogIn">
+        <activity android:name=".activities.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".CompanyEmployees" />
         <activity android:name=".activities.CompanyNew" />
         <activity android:name=".activities.EmployeeProfile" />

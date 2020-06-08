@@ -19,33 +19,30 @@
             android:id="@+id/view_client_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
             android:text="Client"
             android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/view_client_rating"
+            android:id="@+id/view_telephone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view_client_name"
-            android:layout_marginStart="8dp"
             android:layout_marginTop="6dp"
-            android:text="Rating"
-            android:textSize="15sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/view_telephone"
-            android:layout_width="66dp"
-            android:layout_height="wrap_content"
             android:layout_below="@+id/view_client_name"
-            android:layout_alignEnd="@+id/view_client_rating"
-            android:layout_marginTop="6dp"
-            android:layout_marginEnd="-290dp"
             android:text="Phone"
             android:textSize="15sp"
             android:textStyle="bold" />
+
+        <RatingBar
+            android:id="@+id/view_client_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view_telephone"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:numStars="5"
+            android:stepSize="1" />
+
 
     </RelativeLayout>
 

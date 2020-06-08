@@ -5,4 +5,6 @@ public enum CarType {
 	FAMILY, 
 	ECONOMY, 
 	CITY
+	
+	
 }

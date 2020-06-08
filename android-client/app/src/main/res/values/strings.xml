@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">RentACarApp</string>
+    <string-array name="carTypes">
+        <item>LUXURY</item>
+        <item>FAMILY</item>
+        <item>ECONOMY</item>
+        <item>CITY</item>
+
+    </string-array>
 </resources>
