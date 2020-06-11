@@ -18,6 +18,7 @@ import java.util.List;
 import bg.tu.varna.si.model.Company;
 import bg.tu_varna.si.rentacarapp.activities.CompanyNew;
 import bg.tu_varna.si.rentacarapp.adapter.CompanyAdapter;
+import bg.tu_varna.si.rentacarapp.service.CompanyId;
 import bg.tu_varna.si.rentacarapp.viewModels.CompanyViewModel;
 
 public class AdministratorAllCompanies extends AppCompatActivity implements CompanyAdapter.OnItemClickListener {
@@ -58,9 +59,10 @@ public class AdministratorAllCompanies extends AppCompatActivity implements Comp
     @Override
     public void onItemClick(int position) {
         Company clickedCompany = companyList.get(position);
-
-        Intent intent = new Intent(this, CompanyEmployees.class);
-        intent.putExtra(EXTRA_COMPANY_ID, clickedCompany.getId());
+        CompanyId.setCompanyId(clickedCompany.getId());
+      Intent intent = new Intent(this, CompanyEmployees.class);
+//        intent.putExtra(EXTRA_COMPANY_ID, clickedCompany.getId());
+        Log.d ("CompanyId:", String.valueOf(clickedCompany.getId()));
         startActivity(intent);
 
     }

@@ -58,6 +58,7 @@ public abstract class BaseService {
 		car.setPriceForDay(entity.getPriceForDay());
 		car.setRegNumber(entity.getRegNumber());
 		car.setType(entity.getType());
+		car.setAvailable(entity.isAvailable());
 
 		return car;
 	}
@@ -71,6 +72,8 @@ public abstract class BaseService {
 		contract.setEnd(entity.getEnd());
 		contract.setStatusOnStart(fromEntity(entity.getStatusOnStart()));
 		contract.setStatusOnEnd(fromEntity(entity.getStatusOnEnd()));
+		contract.setId(entity.getId());
+		contract.setPrice(entity.getPrice());
 
 		return contract;
 	}
@@ -96,17 +99,21 @@ public abstract class BaseService {
 	}
 
 	protected CarStatus fromEntity(CarStatusEntity entity) {
+		if (entity == null) {
+			return new CarStatus();
+		}
 		return new CarStatus(entity.getStatus(), entity.getDescription());
 	}
 
-	private Client fromEntity(ClientEntity entity) {
+	protected Client fromEntity(ClientEntity entity) {
+		
 		Client client = new Client();
+		client.setId(entity.getId());
 		client.setFirstName(entity.getFirstName());
 		client.setLastName(entity.getLastName());
 		client.setDriversLicense(entity.getDriversLicense());
 		client.setEmail(entity.getEmail());
 		client.setTelephone(entity.getTelephone());
-		client.setCompanyId(entity.getCompanyId());
 		client.setRating(entity.getRating());
 		
 		return client;

@@ -17,7 +17,7 @@ public class ClientViewModel extends ViewModel {
         clientRepository=ClientRepository.getInstance();
         allClientsObservable=clientRepository.getClients(companyId);
     }
-    private LiveData<ClientList> getAllClientsObservable (){
+    public LiveData<ClientList> getAllClientsObservable (){
         return allClientsObservable;
     }
 }

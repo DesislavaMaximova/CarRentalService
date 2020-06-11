@@ -78,11 +78,11 @@ public class CarService extends BaseService {
 		return Optional.empty();
 	}
 
-	public Optional<Car> getByID(Long id) {
+	public Optional<Car> getByID(long companyId, long carId) {
+		Optional<CompanyEntity> companyEntity = companyRepository.findById(companyId);
+		Optional<CarEntity> entity = carRepository.findById(carId);
 
-		Optional<CarEntity> entity = carRepository.findById(id);
-
-		if (!entity.isPresent()) {
+		if (!entity.isPresent() || !companyEntity.isPresent()) {
 			return Optional.empty();
 		}
 		CarEntity carEntity = entity.get();

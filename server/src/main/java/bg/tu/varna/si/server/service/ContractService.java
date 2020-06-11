@@ -1,5 +1,6 @@
 package bg.tu.varna.si.server.service;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,9 +10,11 @@ import org.springframework.stereotype.Service;
 import bg.tu.varna.si.model.Contract;
 import bg.tu.varna.si.model.ContractList;
 import bg.tu.varna.si.server.db.entity.CarStatusEntity;
+import bg.tu.varna.si.server.db.entity.CompanyEntity;
 import bg.tu.varna.si.server.db.entity.ContractEntity;
 import bg.tu.varna.si.server.repository.CarRepository;
 import bg.tu.varna.si.server.repository.ClientRepository;
+import bg.tu.varna.si.server.repository.CompanyRepository;
 import bg.tu.varna.si.server.repository.ContractRepository;
 import bg.tu.varna.si.server.repository.UserRepository;
 
@@ -30,14 +33,29 @@ public class ContractService extends BaseService {
 	@Autowired
 	private UserRepository userRepository;
 
-	public ContractList getAllContracts() {
-		List<ContractEntity> contractEntities = contractRepository.findAll();
-		ContractList contracts = new ContractList();
+	@Autowired
+	private CompanyRepository companyRepository;
 
-		for (ContractEntity entity : contractEntities) {
-			contracts.getContracts().add(fromEntity(entity));
+	public Optional<ContractList> getAllContracts(long companyId) {
+
+		Optional<CompanyEntity> companyEntity = companyRepository.findById(companyId);
+
+		if (companyEntity.isPresent()) {
+
+			ContractList contractsList = new ContractList();
+
+			List<ContractEntity> contractEntities = companyEntity.get().getContracts();
+			List<Contract> contracts = new LinkedList<Contract>();
+			for (ContractEntity entity : contractEntities) {
+				contracts.add(fromEntity(entity));
+			}
+
+			contractsList.setContracts(contracts);
+
+			return Optional.of(contractsList);
 		}
-		return contracts;
+
+		return Optional.empty();
 	}
 
 	public Optional<Contract> getContractById(Long id) {
@@ -52,24 +70,33 @@ public class ContractService extends BaseService {
 		return Optional.of(fromEntity(contractEntity));
 	}
 
-	public Contract createContract(Contract contract) {
+	public Optional<Contract> createContract(long companyId, Contract contract) {
+
+		Optional<CompanyEntity> companyEntity = companyRepository.findById(companyId);
 		Optional<ContractEntity> contractEntity = contractRepository.findById(contract.getId());
 		if (contractEntity.isPresent()) {
 
 			throw new IllegalArgumentException("Record with that ID already exists");
 
 		}
-		ContractEntity entity = new ContractEntity();
-		entity.setCar(carRepository.findByRegNumber(contract.getCar().getRegNumber()));
-		entity.setClient(clientRepository.findByDriversLicense(contract.getClient().getDriversLicense()));
-		entity.setStart(contract.getStart());
-		entity.setEnd(contract.getEnd());
-		entity.setOperator(userRepository.findByUsername(contract.getOperator().getUsername()));
-		CarStatusEntity statusOnStart = new CarStatusEntity(contract.getStatusOnStart().getStatus(),
-				contract.getStatusOnStart().getDescription());
-		entity.setStatusOnStart(statusOnStart);
+		if (!companyEntity.isPresent()) {
+			return Optional.empty();
+		} else {
+			ContractEntity entity = new ContractEntity();
+			entity.setCar(carRepository.findByRegNumber(contract.getCar().getRegNumber()));
+			entity.setClient(clientRepository.findByDriversLicense(contract.getClient().getDriversLicense()));
+			entity.setStart(contract.getStart());
+			entity.setEnd(contract.getEnd());
+			entity.setOperator(userRepository.findByUsername(contract.getOperator().getUsername()));
+			CarStatusEntity statusOnStart = new CarStatusEntity();
+			statusOnStart.setStatus(contract.getStatusOnStart().getStatus());
+			statusOnStart.setDescription(contract.getStatusOnStart().getDescription());
+			entity.setStatusOnStart(statusOnStart);
+			
+			entity.setPrice(contract.getPrice());
 
-		return fromEntity(contractRepository.save(entity));
+			return Optional.of(fromEntity(contractRepository.save(entity)));
+		}
 
 	}
 
@@ -86,11 +113,15 @@ public class ContractService extends BaseService {
 		entity.setStart(contract.getStart());
 		entity.setEnd(contract.getEnd());
 		entity.setOperator(userRepository.findByUsername(contract.getOperator().getUsername()));
-		CarStatusEntity statusOnStart = new CarStatusEntity(contract.getStatusOnStart().getStatus(),
-				contract.getStatusOnStart().getDescription());
+
+		CarStatusEntity statusOnStart = new CarStatusEntity();
+		statusOnStart.setStatus(contract.getStatusOnStart().getStatus());
+		statusOnStart.setDescription(contract.getStatusOnStart().getDescription());
 		entity.setStatusOnStart(statusOnStart);
-		CarStatusEntity statusOnEnd = new CarStatusEntity(contract.getStatusOnEnd().getStatus(),
-				contract.getStatusOnEnd().getDescription());
+
+		CarStatusEntity statusOnEnd = new CarStatusEntity();
+		statusOnEnd.setStatus(contract.getStatusOnEnd().getStatus());
+		statusOnEnd.setDescription(contract.getStatusOnEnd().getDescription());
 		entity.setStatusOnEnd(statusOnEnd);
 
 		return Optional.of(fromEntity(contractRepository.save(entity)));

@@ -9,11 +9,12 @@
     android:layout_marginEnd="8dp"
     app:cardCornerRadius="20dp">
 
-    <RelativeLayout
+    <LinearLayout
 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="8dp">
+        android:padding="8dp"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/view_client_name"
@@ -22,28 +23,43 @@
             android:text="Client"
             android:textSize="20sp"
             android:textStyle="bold" />
-
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Telephone: "
+                android:layout_marginRight="8dp" />
         <TextView
             android:id="@+id/view_telephone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
             android:layout_below="@+id/view_client_name"
             android:text="Phone"
             android:textSize="15sp"
             android:textStyle="bold" />
-
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Client rating: "
+            android:layout_marginRight="8dp" />
         <RatingBar
             android:id="@+id/view_client_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/view_telephone"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="6dp"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_marginLeft="8dp"
             android:numStars="5"
             android:stepSize="1" />
+        </LinearLayout>
 
-
-    </RelativeLayout>
+    </LinearLayout>
 
 </androidx.cardview.widget.CardView>

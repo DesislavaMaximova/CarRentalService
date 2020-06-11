@@ -1,23 +1,54 @@
 package bg.tu.varna.si.model;
 
-public class Client extends User {
+public class Client {
+	private long id;
 	
+	private String firstName;
+	
+	private String lastName;
+	
+	private String email;
 	
 	private float rating;
+	
 	private String telephone;
+	
 	private String driversLicense;
 	
 	public Client() {
-		super(Role.CLIENT);
+		
 	}
-	
-	public Client(String username, String firstName, String lastName, String email, Role role, int rating, String telephone, String driversLicense) {
-		super(Role.CLIENT);
-		
-		this.telephone = telephone;
-		this.driversLicense = driversLicense;
-		this.rating = rating;
-		
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public float getRating() {
@@ -44,6 +75,14 @@ public class Client extends User {
 		this.driversLicense = driversLicense;
 	}
 
+	@Override
+	public String toString() {
+		return firstName + " " + lastName;
+	}
+	
+	
+
+	
 
 
 }

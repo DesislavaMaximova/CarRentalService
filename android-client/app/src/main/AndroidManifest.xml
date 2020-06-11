@@ -10,8 +10,10 @@
         android:label="Rent a Car"
         android:roundIcon="@drawable/ic_rentacar_89116"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".activities.ContractNew"></activity>
+        android:theme="@style/AppTheme"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".activities.ProblemReport"></activity>
+        <activity android:name=".activities.ContractNew" />
         <activity android:name=".activities.CarNew" />
         <activity android:name=".activities.Client_new" />
         <activity android:name=".Queries" />
@@ -25,7 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".CompanyEmployees" />
         <activity android:name=".activities.CompanyNew" />
         <activity android:name=".activities.EmployeeProfile" />

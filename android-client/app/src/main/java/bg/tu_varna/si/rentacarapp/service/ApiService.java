@@ -6,6 +6,7 @@ import bg.tu.varna.si.model.Client;
 import bg.tu.varna.si.model.ClientList;
 import bg.tu.varna.si.model.Contract;
 import bg.tu.varna.si.model.ContractList;
+import bg.tu.varna.si.model.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
@@ -72,10 +73,13 @@ public interface ApiService {
                               @Path("companyId") long companyId,
                               @Body Client client);
 
-    @PUT("/api/{companyId}/client/{clientId}")
+    @PUT("/api/{companyId}/clients/{clientId}")
     Call<Client> updateClient(@Header("Authorization") String bearerToken,
                               @Path("companyId") long companyId,
                               @Path("clientId") long clientId,
                               @Body Client client);
 
+    @GET("/api/users/{userId}")
+    Call<User> getUser(@Header("Authorization") String bearerToken,
+                       @Path("userId") long idEmployee);
 }

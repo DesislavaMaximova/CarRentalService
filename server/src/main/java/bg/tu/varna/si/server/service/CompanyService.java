@@ -105,6 +105,7 @@ public class CompanyService extends BaseService {
 
 		if (companyEntity.isPresent()) {
 			UserList userList = new UserList();
+			
 
 			List<UserEntity> userEntities = companyEntity.get().getEmployees();
 			List<User> users = new LinkedList<User>();
@@ -113,9 +114,6 @@ public class CompanyService extends BaseService {
 			}
 
 			userList.setUsers(users);
-			
-			System.out.println(users.size());
-
 			return Optional.of(userList);
 		}
 
@@ -126,7 +124,7 @@ public class CompanyService extends BaseService {
 	public Optional<User> createEmployee(long id, User user) {
 		Optional<CompanyEntity> companyEntity = companyRepository.findById(id);
 		UserEntity entity = userRepository.findByUsername(user.getUsername());
-		if (companyEntity.isPresent() && entity == null) {
+		if (companyEntity !=null && entity == null) {
 			UserEntity userEntity = new UserEntity();
 			userEntity.setUsername(user.getUsername());
 			userEntity.setPassword(user.getPassword());
@@ -134,6 +132,7 @@ public class CompanyService extends BaseService {
 			userEntity.setLastName(user.getLastName());
 			userEntity.setEmail(user.getEmail());
 			userEntity.setRole(user.getRole());
+			userEntity.setCompany(companyEntity.get());
 			userRepository.save(userEntity);
 
 			CompanyEntity company = companyEntity.get();

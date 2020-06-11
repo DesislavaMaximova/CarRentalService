@@ -165,29 +165,7 @@ public class Car {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Car [regNumber=");
-		builder.append(regNumber);
-		builder.append(", brand=");
-		builder.append(brand);
-		builder.append(", type=");
-		builder.append(type);
-		builder.append(", priceForDay=");
-		builder.append(priceForDay);
-		builder.append(", forSmokers=");
-		builder.append(forSmokers);
-		builder.append(", category=");
-		builder.append(category);
-		builder.append(", image=");
-		builder.append(image);
-		builder.append(", kilometrage=");
-		builder.append(kilometrage);
-		builder.append(", available=");
-		builder.append(available);
-		builder.append(", companyId=");
-		builder.append(companyId);
-		builder.append("]");
-		return builder.toString();
+	 return regNumber;
 	}
 
 

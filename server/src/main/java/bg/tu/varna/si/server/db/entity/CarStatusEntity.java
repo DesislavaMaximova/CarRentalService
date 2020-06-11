@@ -11,24 +11,22 @@ import bg.tu.varna.si.model.Status;
 @Entity
 @Table(name = "Car_Status")
 public class CarStatusEntity {
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-	
-	private Status status;
-	
-	private String description;
 
-	public CarStatusEntity(Status status, String description) {
-		super();
-		this.status = status;
-		this.description = description;
-	}
+	private Status status;
+
+	private String description;
 
 	public long getId() {
 		return id;
 	}
 
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public Status getStatus() {
 		return status;
@@ -45,6 +43,7 @@ public class CarStatusEntity {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-	
+
+
+
 }

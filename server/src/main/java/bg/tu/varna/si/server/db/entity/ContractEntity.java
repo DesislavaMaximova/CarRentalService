@@ -1,18 +1,21 @@
 package bg.tu.varna.si.server.db.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "CONTRACT")
 public class ContractEntity {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
@@ -27,14 +30,18 @@ public class ContractEntity {
 	private CarEntity car;
 
 	private Date start;
-
-	@OneToOne(fetch = FetchType.LAZY)
-	private CarStatusEntity statusOnStart;
-
-	private Date end;
 	
-	@OneToOne(fetch = FetchType.LAZY)
+	private Date end;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "status_on_start_id", referencedColumnName = "id")
+	private CarStatusEntity statusOnStart;
+	
+    @OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
+    @JoinColumn(name = "status_on_end_id", referencedColumnName = "id")
 	private CarStatusEntity statusOnEnd;
+	
+	private double price;
 
 	public long getId() {
 		return id;
@@ -98,6 +105,14 @@ public class ContractEntity {
 
 	public void setStatusOnEnd(CarStatusEntity statusOnEnd) {
 		this.statusOnEnd = statusOnEnd;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
 	}
 
 	

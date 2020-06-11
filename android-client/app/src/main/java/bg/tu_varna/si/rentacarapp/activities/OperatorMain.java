@@ -15,14 +15,14 @@ import bg.tu_varna.si.rentacarapp.Queries;
 import bg.tu_varna.si.rentacarapp.R;
 
 public class OperatorMain extends AppCompatActivity implements View.OnClickListener {
-    public static final String EXTRA_COMPANY_ID = "companyId";
+    public static final String EXTRA_USERNAME = "operatorUsername";
 
     private CardView getAllContracts;
     private CardView getAllClients;
     private CardView getAllVehicles;
     private CardView getReports;
     Intent intent;
-    private long companyId;
+  //  String username;
 
 
     @Override
@@ -39,6 +39,11 @@ public class OperatorMain extends AppCompatActivity implements View.OnClickListe
         getAllVehicles.setOnClickListener(this);
         getReports.setOnClickListener(this);
 
+//        intent = getIntent();
+//        username = intent.getStringExtra(EXTRA_USERNAME);
+//        Log.d("Username: ", username);
+
+
     }
 
     @Override
@@ -47,6 +52,7 @@ public class OperatorMain extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.contract:
                 intent = new Intent(OperatorMain.this, Contracts.class);
+               // intent.putExtra(EXTRA_USERNAME, username);
                 startActivity(intent);
                 break;
             case R.id.clients:

@@ -1,8 +1,9 @@
 package bg.tu.varna.si.model;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class Contract {
+	
 	private long id;
 
 	private User operator;
@@ -20,6 +21,8 @@ public class Contract {
 	private CarStatus statusOnEnd;
 
 	private long companyId;
+	
+	private double price;
 
 	
 	public Contract() {
@@ -112,6 +115,21 @@ public class Contract {
 	}
 
 
+	public double getPrice() {
+		return price;
+	}
+
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -133,9 +151,14 @@ public class Contract {
 		builder.append(statusOnEnd);
 		builder.append(", companyId=");
 		builder.append(companyId);
+		builder.append(", price=");
+		builder.append(price);
 		builder.append("]");
 		return builder.toString();
 	}
+
+
+	
 
 	
 

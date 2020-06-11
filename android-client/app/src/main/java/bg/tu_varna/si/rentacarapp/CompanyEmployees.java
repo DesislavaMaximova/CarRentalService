@@ -20,17 +20,18 @@ import bg.tu.varna.si.model.User;
 import bg.tu_varna.si.rentacarapp.activities.EmployeeProfile;
 import bg.tu_varna.si.rentacarapp.adapter.CompanyAdapter;
 import bg.tu_varna.si.rentacarapp.adapter.EmployeeAdapter;
+import bg.tu_varna.si.rentacarapp.service.CompanyId;
 import bg.tu_varna.si.rentacarapp.viewModels.EmployeeViewModel;
 
 import static bg.tu_varna.si.rentacarapp.R.layout.activity_company_profile;
 
 public class CompanyEmployees extends AppCompatActivity implements CompanyAdapter.OnItemClickListener {
     public static final String EXTRA_EMPLOYEE_ID = "employeeId";
-    public static final String EXTRA_COMPANY_ID = "companyId";
+  //  public static final String EXTRA_COMPANY_ID = "companyId";
     private RecyclerView employeesRecycleView;
     private EmployeeViewModel employeeViewModel;
     EmployeeAdapter employeeAdapter;
-    Long idCompany;
+   // Long idCompany;
 
     List<User> employees =  new LinkedList<>();
 
@@ -39,17 +40,16 @@ public class CompanyEmployees extends AppCompatActivity implements CompanyAdapte
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(activity_company_profile);
-        Intent intent = getIntent();
-        idCompany = intent.getLongExtra(EXTRA_COMPANY_ID, 0);
-
-        Log.d("EXTRA_COMPANY_ID", String.valueOf(idCompany));
+//        Intent intent = getIntent();
+//        idCompany = intent.getLongExtra(EXTRA_COMPANY_ID, 0);
+//        Log.d("EXTRA_COMPANY_ID", String.valueOf(idCompany));
         FloatingActionButton floatingActionButton = findViewById(R.id.fab_admin);
 
         employeesRecycleView = findViewById(R.id.admin_operators);
         employeesRecycleView.setHasFixedSize(true);
         employeeViewModel = new ViewModelProvider(this).get(EmployeeViewModel.class);
 
-        employeeViewModel.init(idCompany);
+        employeeViewModel.init(CompanyId.getCompanyId());
         employeeViewModel.getEmployeeRepository().observe(this, response -> {
             employees.clear();
             employees.addAll(response.getUsers());
@@ -63,7 +63,7 @@ public class CompanyEmployees extends AppCompatActivity implements CompanyAdapte
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CompanyEmployees.this, EmployeeProfile.class);
-                intent.putExtra(EXTRA_COMPANY_ID, idCompany);
+                //intent.putExtra(EXTRA_COMPANY_ID, idCompany);
                 startActivity(intent);
             }
         });
@@ -87,7 +87,7 @@ public class CompanyEmployees extends AppCompatActivity implements CompanyAdapte
         User clickeduser = employees.get(position);
         Log.d("ClickedUser: ", employees.get(position).toString());
         Intent intent = new Intent(this, EmployeeProfile.class);
-        intent.putExtra(EXTRA_COMPANY_ID, idCompany);
+       // intent.putExtra(EXTRA_COMPANY_ID, idCompany);
         intent.putExtra(EXTRA_EMPLOYEE_ID, clickeduser.getId());
         startActivity(intent);
     }

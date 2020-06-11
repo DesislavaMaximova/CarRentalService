@@ -7,8 +7,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Log;
@@ -38,6 +40,7 @@ import bg.tu.varna.si.model.Car;
 import bg.tu.varna.si.model.CarCategory;
 import bg.tu.varna.si.model.CarType;
 import bg.tu_varna.si.rentacarapp.Cars;
+import bg.tu_varna.si.rentacarapp.CompanyEmployees;
 import bg.tu_varna.si.rentacarapp.R;
 import bg.tu_varna.si.rentacarapp.service.ApiService;
 import bg.tu_varna.si.rentacarapp.service.CompanyId;
@@ -72,6 +75,9 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
     long carId;
     ArrayAdapter<CarType> typeAdapter;
     ArrayAdapter<CarCategory> categoryAdapter;
+    private Handler handler = new Handler();
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,8 +97,8 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
         back = findViewById(R.id.fab_car_back);
 
         Intent intent = getIntent();
-        carId = intent.getIntExtra(EXTRA_CAR_ID, -1);
-        Log.d ("CarId: ", String.valueOf(carId));
+        carId = intent.getLongExtra(EXTRA_CAR_ID, -1L);
+        Log.d("CarId: ", String.valueOf(carId));
         apiService = RetrofitService.cteateService(ApiService.class);
 
         typeAdapter = new ArrayAdapter<CarType>(this,
@@ -118,17 +124,17 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
             fabCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //    putCar();
+                    putCar(CompanyId.getCompanyId(), carId, makeCar());
+                    handler.postDelayed(updateTimeTask, 1500);
                 }
             });
         } else {
+            setTitle("New car");
             fabCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-
                     postCar(CompanyId.getCompanyId(), makeCar());
-                    Intent intent = new Intent(CarNew.this, Cars.class);
-                    startActivity(intent);
+                    handler.postDelayed(updateTimeTask, 1500);
                 }
             });
         }
@@ -142,15 +148,36 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
 
     }
 
+    private void putCar(long companyId, long carId, Car car) {
+        Call<Car> call = apiService.updateCar(JwtHandler.getJwt(),companyId, carId, car);
+        call.enqueue((new Callback<Car>() {
+            @Override
+            public void onResponse(Call<Car> call, Response<Car> response) {
+                Toast.makeText(CarNew.this,
+                        "Car with registration number " +
+                                response.body().getRegNumber() + " is updated",
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onFailure(Call<Car> call, Throwable t) {
+                Toast.makeText(CarNew.this,
+                        "Error: " + t.toString(),
+                        Toast.LENGTH_LONG).show();
+            }
+        }));
+    }
+
     private void getCar() {
         Call<Car> call = apiService.getCar(JwtHandler.getJwt(), CompanyId.getCompanyId(), carId);
         call.enqueue(new Callback<Car>() {
             @Override
             public void onResponse(Call<Car> call, Response<Car> response) {
+                Log.d("Response:", String.valueOf(response.body()));
                 regNumber.setText(response.body().getRegNumber());
                 brand.setText(response.body().getBrand());
-                kilometrage.setText((int) response.body().getKilometrage());
-                priceForDay.setText((int) response.body().getPriceForDay());
+                kilometrage.setText(String.valueOf(response.body().getKilometrage()));
+                priceForDay.setText(String.valueOf(response.body().getPriceForDay()));
 
                 CarType carType = response.body().getType();
                 if (carType != null) {
@@ -162,14 +189,14 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
                     int spinnerPosition = categoryAdapter.getPosition(carCategory);
                     categorySpinner.setSelection(spinnerPosition);
                 }
-
                 smoking.setChecked(response.body().getForSmokers());
                 available.setChecked(response.body().isAvailable());
 
+
                 String image = response.body().getImage();
                 byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
-                Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-                carImage.setImageBitmap(decodedByte);
+                bitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                carImage.setImageBitmap(bitmap);
             }
 
             @Override
@@ -178,7 +205,12 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
             }
         });
     }
-
+    private Runnable updateTimeTask = new Runnable() {
+        public void run() {
+            Intent intent = new Intent(CarNew.this, Cars.class);
+            startActivity(intent);
+        }
+    };
 
     private void openFileChooser() {
         Intent intent = new Intent();
@@ -193,7 +225,12 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null
                 && data.getData() != null) {
             carUri = data.getData();
-            Picasso.get().load(carUri).into(carImage);
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(),carUri);
+                carImage.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -204,13 +241,11 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
             @Override
             public void onResponse(Call<Car> call, Response<Car> response) {
                 Toast.makeText(CarNew.this, "New car was created in database!", Toast.LENGTH_LONG).show();
-
             }
 
             @Override
             public void onFailure(Call<Car> call, Throwable t) {
                 Toast.makeText(CarNew.this, "The car can't be saved in database!", Toast.LENGTH_LONG).show();
-
             }
         });
 
@@ -218,6 +253,9 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
 
     private String convertToString() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+
+        bitmap = ((BitmapDrawable) carImage.getDrawable()).getBitmap();
+
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, byteArrayOutputStream);
         byte[] imgByte = byteArrayOutputStream.toByteArray();
         return Base64.encodeToString(imgByte, Base64.DEFAULT);
@@ -227,10 +265,18 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
         Car car = new Car();
         String image = convertToString();
         car.setRegNumber(regNumber.getText().toString());
-        car.setAvailable(available.isChecked());
+        if (available.isChecked()) {
+            car.setAvailable(true);
+        } else {
+            car.setAvailable(false);
+        }
+        if (smoking.isChecked()) {
+            car.setForSmokers(true);
+        } else {
+            car.setForSmokers(false);
+        }
         car.setCategory(carCategory);
         car.setType(carType);
-        car.setForSmokers(smoking.isChecked());
         car.setBrand(brand.getText().toString());
         long companyId = CompanyId.getCompanyId();
         car.setCompanyId(companyId);
@@ -257,4 +303,5 @@ public class CarNew extends AppCompatActivity implements AdapterView.OnItemSelec
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
 }

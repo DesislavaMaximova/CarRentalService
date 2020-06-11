@@ -6,6 +6,10 @@ public class CarStatus {
 	
 	private String description;
 	
+	public CarStatus() {
+		
+	}
+	
 	public CarStatus(Status status, String description) {
 
 		this.status = status;

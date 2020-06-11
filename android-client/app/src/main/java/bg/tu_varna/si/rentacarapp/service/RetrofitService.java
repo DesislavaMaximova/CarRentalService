@@ -1,5 +1,8 @@
 package bg.tu_varna.si.rentacarapp.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+
 import java.io.IOException;
 
 import bg.tu_varna.si.rentacarapp.Constants;
@@ -10,7 +13,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitService {
-    private  static OkHttpClient okHttpClient = new OkHttpClient.Builder()
+    private static OkHttpClient okHttpClient = new OkHttpClient.Builder()
             .addInterceptor(new Interceptor() {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -21,9 +24,13 @@ public class RetrofitService {
                 }
             }).build();
 
-    private  static Retrofit retrofit = new Retrofit.Builder()
+    private static Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Constants.BACKEND_ADDRESS)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(
+                    new GsonBuilder()
+                            .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
+                            .create()
+            ))
             .client(okHttpClient)
             .build();
 

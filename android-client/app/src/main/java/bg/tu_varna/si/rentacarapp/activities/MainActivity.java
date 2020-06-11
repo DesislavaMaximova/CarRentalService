@@ -34,16 +34,14 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    public static final String EXTRA_COMPANY_ID = "companyId";
+    public static long userId;
+
     private EditText editUsername;
     private EditText editPassword;
     private Button login;
     AuthService authService;
     private AuthenticationRequest credentials;
-    long idCompany;
-    Intent intent;
-    String username;
-    String password;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.button_submit);
         editUsername = findViewById(R.id.edit_username);
         editPassword = findViewById(R.id.edit_pass);
+
 //        username.setText("");
 //        password.setText("");
 
@@ -67,17 +66,21 @@ public class MainActivity extends AppCompatActivity {
             call.enqueue(new Callback<AuthenticationResponse>() {
                 @Override
                 public void onResponse(Call<AuthenticationResponse> call, Response<AuthenticationResponse> response) {
-                    Log.d("Response", String.valueOf(response.code()));
-                    JwtHandler.setJwt(response.body().getJwt());
-                    CompanyId.setCompanyId(response.body().getCompanyId());
-                    Log.d("Role: ", response.body().getRole().toString());
-                    Toast.makeText(MainActivity.this, "Welcome : " + response.body().getUsername(), Toast.LENGTH_LONG).show();
-                    if (response.body().getRole().equals("ADMINISTRATOR")) {
-                        Intent intent = new Intent(MainActivity.this, AdministratorAllCompanies.class);
-                        startActivity(intent);
-                    } else if (response.body().getRole().equals("OPERATOR")) {
-                        Intent intent = new Intent(MainActivity.this, OperatorMain.class);
-                        startActivity(intent);
+                    if(response.isSuccessful()) {
+                        Log.d("Response", String.valueOf(response.code()));
+                        JwtHandler.setJwt(response.body().getJwt());
+                        CompanyId.setCompanyId(response.body().getCompanyId());
+                        Log.d("Role: ", response.body().getRole().toString());
+                        Toast.makeText(MainActivity.this, "Welcome : " + response.body().getRole(), Toast.LENGTH_LONG).show();
+                        if (response.body().getRole().equals("ADMINISTRATOR")) {
+                            Intent intent = new Intent(MainActivity.this, AdministratorAllCompanies.class);
+                            startActivity(intent);
+                        } else if (response.body().getRole().equals("OPERATOR")) {
+                            Intent intent = new Intent(MainActivity.this, OperatorMain.class);
+                            userId = response.body().getUserId();
+                         //   intent.putExtra(EXTRA_USERNAME, response.body().getUsername());
+                            startActivity(intent);
+                        }
                     }
                 }
 

@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="Gradle: ./../data-model/release/data-model-0.0.1-SNAPSHOT.jar">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/../data-model/release/data-model-0.0.1-SNAPSHOT.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

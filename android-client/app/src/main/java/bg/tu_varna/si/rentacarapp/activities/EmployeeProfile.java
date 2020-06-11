@@ -32,6 +32,7 @@ import bg.tu_varna.si.rentacarapp.AdministratorAllCompanies;
 import bg.tu_varna.si.rentacarapp.CompanyEmployees;
 import bg.tu_varna.si.rentacarapp.R;
 import bg.tu_varna.si.rentacarapp.service.AdminService;
+import bg.tu_varna.si.rentacarapp.service.CompanyId;
 import bg.tu_varna.si.rentacarapp.service.JwtHandler;
 import bg.tu_varna.si.rentacarapp.service.RetrofitService;
 import retrofit2.Call;
@@ -40,7 +41,7 @@ import retrofit2.Response;
 
 public class EmployeeProfile extends AppCompatActivity {
 
-    public static final String EXTRA_COMPANY_ID = "companyId";
+  //  public static final String EXTRA_COMPANY_ID = "companyId";
     public static final String EXTRA_EMPLOYEE_ID = "employeeId";
 
     EditText editTextUsername;
@@ -49,10 +50,10 @@ public class EmployeeProfile extends AppCompatActivity {
     EditText editTextLastName;
     EditText editTextEmail;
     ImageView image;
-    Long idCompany;
+    //Long idCompany;
     Long idEmployee;
     AdminService adminService;
-    private Handler mHandler = new Handler();
+    private Handler handler = new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +69,8 @@ public class EmployeeProfile extends AppCompatActivity {
         editTextEmail = findViewById(R.id.edit_email);
         image = findViewById(R.id.imageView);
         Intent intent = getIntent();
-        idCompany = intent.getLongExtra(EXTRA_COMPANY_ID, 0);
-        Log.d("CompanyId:", idCompany.toString());
+       // idCompany = intent.getLongExtra(EXTRA_COMPANY_ID, 0);
+       // Log.d("CompanyId:", idCompany.toString());
         idEmployee = intent.getLongExtra(EXTRA_EMPLOYEE_ID, -1);
         Log.d("EmployeeId: ", idEmployee.toString());
         adminService = RetrofitService.cteateService(AdminService.class);
@@ -81,9 +82,9 @@ public class EmployeeProfile extends AppCompatActivity {
             fabCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Log.d("Company ID: ", idCompany.toString());
-                    putEmployee(fillUser(), idCompany, idEmployee);
-                    mHandler.postDelayed(mUpdateTimeTask, 1000);
+                    Log.d("Company ID: ", String.valueOf(CompanyId.getCompanyId()));
+                    putEmployee(fillUser(), CompanyId.getCompanyId(), idEmployee);
+                    handler.postDelayed(updateTimeTask, 1500);
                 }
             });
         } else {
@@ -92,8 +93,8 @@ public class EmployeeProfile extends AppCompatActivity {
             fabCheck.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    postEmployee(fillUser(), idCompany);
-                    mHandler.postDelayed(mUpdateTimeTask, 1000);
+                    postEmployee(fillUser(), CompanyId.getCompanyId());
+                    handler.postDelayed(updateTimeTask, 1500);
                 }
             });
 
@@ -127,17 +128,17 @@ public class EmployeeProfile extends AppCompatActivity {
 
     }
 
-    private Runnable mUpdateTimeTask = new Runnable() {
+    private Runnable updateTimeTask = new Runnable() {
         public void run() {
             Intent intent = new Intent(EmployeeProfile.this, CompanyEmployees.class);
-            intent.putExtra(EXTRA_COMPANY_ID, idCompany);
+           // intent.putExtra(EXTRA_COMPANY_ID, idCompany);
             startActivity(intent);
         }
     };
 
     private void putEmployee(User user, long companyId, long employeeId) {
         Call<User> call = adminService.udapateEmployee(JwtHandler.getJwt(),companyId, employeeId, user);
-        Log.d("companyId: ", idCompany.toString());
+        //Log.d("companyId: ", idCompany.toString());
         Log.d("employeeId: ", idEmployee.toString());
         Log.d("User: ", user.toString());
         call.enqueue(new Callback<User>() {
@@ -184,6 +185,7 @@ public class EmployeeProfile extends AppCompatActivity {
         user.setUsername(editTextUsername.getText().toString());
         user.setPassword(editTextPassword.getText().toString());
         user.setEmail(editTextEmail.getText().toString());
+        user.setCompanyId(CompanyId.getCompanyId());
         return user;
 
     }

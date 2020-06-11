@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.stereotype.Service;
 
-import bg.tu.varna.si.model.CompanyList;
 import bg.tu.varna.si.model.User;
 import bg.tu.varna.si.model.UserList;
 import bg.tu.varna.si.model.UserRequest;
@@ -35,7 +34,7 @@ public class UserService {
 		user.setUsername(userEntity.getUsername());
 		user.setPassword(userEntity.getPassword());
 		user.setEmail(userEntity.getEmail());
-		user.setCompanyId(userEntity.getCompanyId());
+		user.setCompanyId(userEntity.getCompany().getId());
 		
 		return user;
 	}
@@ -76,7 +75,9 @@ public class UserService {
 		userEntity.setLastName(userReg.getUser().getLastName());
 		userEntity.setEmail(userReg.getUser().getEmail());
 		userEntity.setRole(userReg.getUser().getRole());
-		userEntity.setCompanyId(userReg.getUser().getCompanyId());
+		
+		CompanyEntity companyEntity = companyRepository.findById(userReg.getUser().getCompanyId()).get();
+		userEntity.setCompany(companyEntity);
 
 		userRepository.save(userEntity);
 		User user = fromEntity(userEntity);
@@ -97,7 +98,9 @@ public class UserService {
 		entity.setLastName(userRequest.getUser().getLastName());
 		entity.setEmail(userRequest.getUser().getEmail());
 		entity.setRole(userRequest.getUser().getRole());
-		entity.setCompanyId(userRequest.getUser().getCompanyId());
+		
+		CompanyEntity companyEntity = companyRepository.findById(userRequest.getUser().getCompanyId()).get();
+		entity.setCompany(companyEntity);
 
 		userRepository.save(entity);
 		User user = fromEntity(entity);

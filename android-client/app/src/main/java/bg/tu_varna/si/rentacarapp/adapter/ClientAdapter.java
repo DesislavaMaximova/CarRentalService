@@ -40,19 +40,20 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ClientView
     @Override
     public ClientViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.employees_item, parent, false);
+                .inflate(R.layout.client_item, parent, false);
         return new ClientViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ClientViewHolder holder, int position) {
         Client currentClient = clients.get(position);
-        String firstName = currentClient.getFirstName();
-        String lastName = currentClient.getLastName();
+        String name = currentClient.getFirstName() + " " + currentClient.getLastName();
+
+
         String phone = currentClient.getTelephone();
         float rating = currentClient.getRating();
 
-        holder.clientName.setText(firstName + " " + lastName);
+        holder.clientName.setText(name);
         holder.phone.setText(phone);
         holder.ratingBar.setRating(rating);
     }

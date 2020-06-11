@@ -55,10 +55,11 @@ public class AuthorizationController {
 		String jwt = jwtService.generateToken(userDetails);
 		String username = credentials.getUsername();
 		UserEntity user = userRepository.findByUsername(username);
-		long companyId = user.getCompanyId();
+		long userId = user.getId();
+		long companyId = user.getCompany().getId();
 		List<GrantedAuthority> list = new LinkedList<>(userDetails.getAuthorities());
 		String role = list.get(0).getAuthority();
-		return ResponseEntity.ok(new AuthenticationResponse(jwt, username, role, companyId));
+		return ResponseEntity.ok(new AuthenticationResponse(jwt, username, role, companyId, userId));
 	}
 
 }

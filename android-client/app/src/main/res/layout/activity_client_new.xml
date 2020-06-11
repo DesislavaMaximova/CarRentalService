@@ -5,6 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <EditText
         android:id="@+id/client_first_name"
@@ -62,7 +70,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
-        android:text="Awesome"
+        android:text=""
         android:textSize="16sp"
         android:textStyle="bold" />
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -82,4 +90,6 @@
         android:layout_margin="6dp"
         android:src="@drawable/ic_cancel_black_24dp" >
     </com.google.android.material.floatingactionbutton.FloatingActionButton>
+    </androidx.appcompat.widget.LinearLayoutCompat>
+    </ScrollView>
 </LinearLayout>

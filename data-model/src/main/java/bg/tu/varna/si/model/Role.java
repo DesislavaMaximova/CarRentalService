@@ -4,7 +4,6 @@ public enum Role {
 	
 	ADMINISTRATOR,
 	
-	OPERATOR,
+	OPERATOR
 	
-	CLIENT
 }

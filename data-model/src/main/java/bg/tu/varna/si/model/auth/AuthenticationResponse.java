@@ -6,12 +6,15 @@ public class AuthenticationResponse {
 	private String username;
 	private String role;
 	private long companyId;
+	private long userId;
 
-	public AuthenticationResponse(String jwt, String username, String role, long companyId) {
+	public AuthenticationResponse(String jwt, String username, String role, long companyId, long userId) {
 		this.jwt = jwt;
 		this.username = username;
 		this.role = role;
 		this.companyId = companyId;
+		this.userId = userId;
+		
 	}
 
 	public String getJwt() {
@@ -26,4 +29,8 @@ public class AuthenticationResponse {
 	public long getCompanyId() {
 		return companyId;
 	}
+	public long getUserId() {
+		return userId;
+	}
 }
+

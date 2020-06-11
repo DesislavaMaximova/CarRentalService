@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -57,11 +58,14 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         Log.d("Image: ", image);
         String regNumber = current.getRegNumber();
         String brand = current.getBrand();
+        Boolean available = current.isAvailable();
         byte[] decodedString = Base64.decode(image, Base64.DEFAULT);
         Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
         holder.regNumber.setText(regNumber);
         holder.brand.setText(brand);
         holder.image.setImageBitmap(decodedByte);
+        holder.available.setChecked(available);
+
 
 
     }
@@ -75,13 +79,15 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         public ImageView image;
         public TextView regNumber;
         public TextView brand;
-        public TextView priceForDay;
+        public CheckBox available;
+
 
         public CarViewHolder(@NonNull View itemView) {
             super(itemView);
             image = itemView.findViewById(R.id.car_image_view);
             regNumber = itemView.findViewById(R.id.view_reg_number);
             brand = itemView.findViewById(R.id.view_brand);
+            available = itemView.findViewById(R.id.view_check_available);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
