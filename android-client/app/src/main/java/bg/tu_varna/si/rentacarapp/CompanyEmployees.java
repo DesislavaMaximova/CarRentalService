@@ -3,6 +3,8 @@ package bg.tu_varna.si.rentacarapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import bg.tu.varna.si.model.User;
 import bg.tu_varna.si.rentacarapp.activities.EmployeeProfile;
+import bg.tu_varna.si.rentacarapp.activities.MainActivity;
 import bg.tu_varna.si.rentacarapp.adapter.CompanyAdapter;
 import bg.tu_varna.si.rentacarapp.adapter.EmployeeAdapter;
 import bg.tu_varna.si.rentacarapp.service.CompanyId;
@@ -90,6 +93,21 @@ public class CompanyEmployees extends AppCompatActivity implements CompanyAdapte
        // intent.putExtra(EXTRA_COMPANY_ID, idCompany);
         intent.putExtra(EXTRA_EMPLOYEE_ID, clickeduser.getId());
         startActivity(intent);
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        int id = item.getItemId();
+        if (id == R.id.menu_logout) {
+            intent = new Intent(this, MainActivity.class);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
 

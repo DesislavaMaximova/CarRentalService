@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
@@ -82,5 +84,20 @@ public class Contracts extends AppCompatActivity implements CompanyAdapter.OnIte
         } else {
             contractAdapter.notifyDataSetChanged();
         }
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        int id = item.getItemId();
+        if (id == R.id.menu_logout) {
+            intent = new Intent(this, MainActivity.class);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

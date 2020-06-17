@@ -5,6 +5,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -127,7 +128,7 @@ public class ApiController {
 		return ResponseEntity.ok().body(contractService.getContractById(contractId));
 		
 	}
-	@PutMapping("/{companyId}/contracts/{contractId}")
+	@PutMapping ("/{companyId}/contracts/{contractId}")
 	public ResponseEntity<Optional<Contract>> updateContract(@PathVariable ("companyId") long companyId,
 			@PathVariable ("contractId") long contractId,
 			@RequestBody Contract contract){

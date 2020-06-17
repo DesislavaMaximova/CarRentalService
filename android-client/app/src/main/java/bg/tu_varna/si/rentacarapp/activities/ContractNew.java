@@ -1,10 +1,5 @@
 package bg.tu_varna.si.rentacarapp.activities;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-
-import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Build;
@@ -13,24 +8,26 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
@@ -40,14 +37,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import bg.tu.varna.si.model.Car;
-import bg.tu.varna.si.model.CarCategory;
 import bg.tu.varna.si.model.CarStatus;
-import bg.tu.varna.si.model.CarType;
 import bg.tu.varna.si.model.Client;
 import bg.tu.varna.si.model.Contract;
 import bg.tu.varna.si.model.Status;
 import bg.tu.varna.si.model.User;
-import bg.tu_varna.si.rentacarapp.Cars;
 import bg.tu_varna.si.rentacarapp.Contracts;
 import bg.tu_varna.si.rentacarapp.R;
 import bg.tu_varna.si.rentacarapp.service.ApiService;
@@ -77,7 +71,6 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
     private ClientViewModel clientViewModel;
     TextView operatorTextView;
     private User user;
-    String operatorName;
     EditText startEditText;
     EditText endEditText;
     int year = calendar.get(Calendar.YEAR);
@@ -87,18 +80,12 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
     Spinner carSpinner;
     Client selectedClient;
     Car selectedCar;
-    EditText endReportEditText;
     EditText startReportEditText;
     EditText priceEditText;
     double carPrice;
-    CheckBox outsideDamage;
-    CheckBox insideDamage;
-    CheckBox engineDamage;
-    CheckBox transmissionDamage;
-    double contractPrice;
     long contractId;
     private Handler handler = new Handler();
-    Contract contract;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,7 +100,6 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
         startEditText = findViewById(R.id.start_date);
         startReportEditText = findViewById(R.id.start_report);
         endEditText = findViewById(R.id.end_date);
-        endReportEditText = findViewById(R.id.end_status);
         priceEditText = findViewById(R.id.final_price);
 
 
@@ -123,7 +109,7 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
         Intent intent = getIntent();
         contractId = intent.getLongExtra("contractId", -1);
 
-        getOperator(userId);
+        getOperator();
 
         carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
         carViewModel.available(CompanyId.getCompanyId());
@@ -211,45 +197,26 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
         endEditText.addTextChangedListener(textWatcher);
 
 
-        if (contractId != -1) {
-            setTitle("Edit contract");
-            getContract(CompanyId.getCompanyId(), contractId);
-            fabCheck.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-//          TODO: putContract();
-                    handler.postDelayed(updateTimeTask, 1500);
-                }
-            });
-        } else {
-            setTitle("New contract");
-            fabCheck.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (startEditText == null || endEditText == null) {
-                        Toast.makeText(ContractNew.this, "Input valid start and end date!", Toast.LENGTH_LONG).show();
-                    } else {
-                        try {
-                            createContract(CompanyId.getCompanyId(), fetchContractInfo());
-                        } catch (ParseException e) {
-                            e.printStackTrace();
-                        }
-                        handler.postDelayed(updateTimeTask, 1500);
-
-
+        setTitle("New contract");
+        fabCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (startEditText == null || endEditText == null) {
+                    Toast.makeText(ContractNew.this, "Input valid start and end date!", Toast.LENGTH_LONG).show();
+                } else {
+                    try {
+                        createContract(CompanyId.getCompanyId(), fetchContractInfo());
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
+                    handler.postDelayed(updateTimeTask, 1500);
 
                 }
-            });
 
-            endReportEditText.setEnabled(false);
-            insideDamage.setEnabled(false);
-            outsideDamage.setEnabled(false);
-            engineDamage.setEnabled(false);
-            transmissionDamage.setEnabled(false);
+            }
+        });
 
-        }
+
         fabBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -258,42 +225,16 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
             }
         });
 
-        insideDamage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                calculatePrice();
-            }
-        });
-        outsideDamage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                calculatePrice();
-            }
-        });
-        transmissionDamage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                calculatePrice();
-            }
-        });
-        engineDamage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                calculatePrice();
-            }
-        });
     }
 
-
-    public void getOperator(long operatorId) {
+    public void getOperator() {
         Call<User> call = apiService.getUser(JwtHandler.getJwt(), MainActivity.userId);
         call.enqueue(new Callback<User>() {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 Log.d("Operator", response.body().toString());
 
-                operatorName = response.body().getFirstName() + " " + response.body().getLastName();
-                operatorTextView.setText(operatorName);
+                operatorTextView.setText(response.body().getFirstName() + " " + response.body().getLastName());
 
                 user = new User();
                 user.setCompanyId(response.body().getCompanyId());
@@ -351,39 +292,6 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
         });
     }
 
-    public void getContract(long companyId, long contractId) {
-        Call<Contract> call = apiService.getContract(JwtHandler.getJwt(), companyId, contractId);
-        call.enqueue(new Callback<Contract>() {
-            @Override
-            public void onResponse(Call<Contract> call, Response<Contract> response) {
-                operatorTextView.setText(response.body().getOperator().getFirstName() + " " +
-                        response.body().getOperator().getLastName());
-                priceEditText.setText(String.valueOf(response.body().getPrice()));
-                startReportEditText.setText(response.body().getStatusOnStart().getDescription());
-                endReportEditText.setText(response.body().getStatusOnEnd().getDescription());
-                Car car = response.body().getCar();
-                cars.add(car);
-                carAdapter.notifyDataSetChanged();
-                Client client = response.body().getClient();
-                if (client != null) {
-                    int spinnerPosition = clientAdapter.getPosition(client);
-                    clientSpinner.setSelection(spinnerPosition);
-                }
-
-                String startDate = new SimpleDateFormat(DATE_PATTERN).format(response.body().getStart());
-                startEditText.setText(startDate);
-                String endDate = new SimpleDateFormat(DATE_PATTERN).format(response.body().getEnd());
-                endEditText.setText(endDate);
-
-
-            }
-
-            @Override
-            public void onFailure(Call<Contract> call, Throwable t) {
-                Log.d("Get contract error:", t.getMessage());
-            }
-        });
-    }
 
     public Contract fetchContractInfo() throws ParseException {
         Contract contract = new Contract();
@@ -404,11 +312,10 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
 
         Date endDate = new SimpleDateFormat(DATE_PATTERN).parse(endEditText.getText().toString());
         contract.setEnd(endDate);
-        Log.d("Car price:", String.valueOf(contractPrice));
         contract.setPrice(Double.parseDouble(priceEditText.getText().toString()));
         contract.setActive(true);
-
         return contract;
+
     }
 
     public void calculatePrice() {
@@ -440,27 +347,27 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
 
         initialPrice = duration * carPrice;
 
-        double insideDamagePrice = 0;
-        double outsideDamagePrice = 0;
-        double engineDamagePrice = 0;
-        double transmissionDamagePrice = 0;
+//        double insideDamagePrice = 0;
+//        double outsideDamagePrice = 0;
+//        double engineDamagePrice = 0;
+//        double transmissionDamagePrice = 0;
 
-        if (insideDamage.isChecked()) {
-            insideDamagePrice = initialPrice * 20;
-        }
-        if (outsideDamage.isChecked()) {
-            outsideDamagePrice = initialPrice * 30;
+//        if (insideDamage.isChecked()) {
+//            insideDamagePrice = initialPrice * 20;
+//        }
+//        if (outsideDamage.isChecked()) {
+//            outsideDamagePrice = initialPrice * 30;
+//
+//        }
+//        if (transmissionDamage.isChecked()) {
+//            transmissionDamagePrice = initialPrice * 50;
+//        }
+//
+//        if (engineDamage.isChecked()) {
+//            engineDamagePrice = initialPrice * 100;
+//        }
 
-        }
-        if (transmissionDamage.isChecked()) {
-            transmissionDamagePrice = initialPrice * 50;
-        }
-
-        if (engineDamage.isChecked()) {
-            engineDamagePrice = initialPrice * 100;
-        }
-
-        double contractPrice = initialPrice + insideDamagePrice + outsideDamagePrice + engineDamagePrice + transmissionDamagePrice;
+        double contractPrice = initialPrice;
         priceEditText.setText(String.valueOf(contractPrice));
 
     }
@@ -479,5 +386,23 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
             startActivity(intent);
         }
     };
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
 
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        int id = item.getItemId();
+        if (id == R.id.menu_logout) {
+            intent = new Intent(this, MainActivity.class);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 }

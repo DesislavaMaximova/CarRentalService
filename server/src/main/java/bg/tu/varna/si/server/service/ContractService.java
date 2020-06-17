@@ -130,6 +130,7 @@ public class ContractService extends BaseService {
 		statusOnEnd.setDescription(contract.getStatusOnEnd().getDescription());
 		entity.setStatusOnEnd(statusOnEnd);
 		entity.setActive(contract.isActive());
+		entity.setPrice(contract.getPrice());
 
 		return Optional.of(fromEntity(contractRepository.save(entity)));
 	}

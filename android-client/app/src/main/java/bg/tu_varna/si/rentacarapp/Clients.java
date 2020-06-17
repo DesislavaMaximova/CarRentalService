@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -20,6 +22,7 @@ import bg.tu.varna.si.model.Car;
 import bg.tu.varna.si.model.Client;
 import bg.tu_varna.si.rentacarapp.activities.CarNew;
 import bg.tu_varna.si.rentacarapp.activities.Client_new;
+import bg.tu_varna.si.rentacarapp.activities.MainActivity;
 import bg.tu_varna.si.rentacarapp.adapter.CarAdapter;
 import bg.tu_varna.si.rentacarapp.adapter.ClientAdapter;
 import bg.tu_varna.si.rentacarapp.adapter.CompanyAdapter;
@@ -81,5 +84,20 @@ public class Clients extends AppCompatActivity implements CompanyAdapter.OnItemC
         intent.putExtra(EXTRA_CLIENT_ID,clickedClient.getId());
         Log.d("Clients - clientId: ", String.valueOf(clickedClient.getId()));
         startActivity(intent);
+    }
+    public boolean onCreateOptionsMenu(Menu menu) {
+
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        int id = item.getItemId();
+        if (id == R.id.menu_logout) {
+            intent = new Intent(this, MainActivity.class);
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
