@@ -21,6 +21,7 @@ import java.util.List;
 import bg.tu.varna.si.model.Contract;
 import bg.tu_varna.si.rentacarapp.activities.ContractNew;
 import bg.tu_varna.si.rentacarapp.activities.MainActivity;
+import bg.tu_varna.si.rentacarapp.activities.UpdateContract;
 import bg.tu_varna.si.rentacarapp.adapter.ClientAdapter;
 import bg.tu_varna.si.rentacarapp.adapter.CompanyAdapter;
 import bg.tu_varna.si.rentacarapp.adapter.ContractAdapter;
@@ -47,6 +48,7 @@ public class Contracts extends AppCompatActivity implements CompanyAdapter.OnIte
         contractViewModel.getAllContactsObservable().observe(this, response -> {
             contracts.clear();
             contracts.addAll(response.getContracts());
+            Log.d("Contracts count:", String.valueOf(contracts.size()));
             contractAdapter.notifyDataSetChanged();
         });
         setUpRecycleView();
@@ -64,8 +66,9 @@ public class Contracts extends AppCompatActivity implements CompanyAdapter.OnIte
     @Override
     public void onItemClick(int position) {
         Contract clickedContract = contracts.get(position);
-        Intent intent = new Intent(Contracts.this, ContractNew.class);
+        Intent intent = new Intent(Contracts.this, UpdateContract.class);
         intent.putExtra("contractId", clickedContract.getId());
+        startActivity(intent);
 
     }
 
@@ -74,7 +77,6 @@ public class Contracts extends AppCompatActivity implements CompanyAdapter.OnIte
             contractAdapter = new ContractAdapter(Contracts.this, contracts);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
             recyclerView.setAdapter(contractAdapter);
-            //recyclerView.setItemAnimator(new DefaultItemAnimator());
             recyclerView.setNestedScrollingEnabled(true);
             contractAdapter.setOnItemClickListener(Contracts.this);
         } else {

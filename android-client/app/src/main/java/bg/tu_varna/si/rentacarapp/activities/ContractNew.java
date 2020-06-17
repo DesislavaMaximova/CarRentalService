@@ -1,36 +1,39 @@
 package bg.tu_varna.si.rentacarapp.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
-import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
-import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
@@ -38,13 +41,14 @@ import java.util.List;
 
 import bg.tu.varna.si.model.Car;
 import bg.tu.varna.si.model.CarCategory;
-import bg.tu.varna.si.model.CarList;
 import bg.tu.varna.si.model.CarStatus;
 import bg.tu.varna.si.model.CarType;
 import bg.tu.varna.si.model.Client;
 import bg.tu.varna.si.model.Contract;
 import bg.tu.varna.si.model.Status;
 import bg.tu.varna.si.model.User;
+import bg.tu_varna.si.rentacarapp.Cars;
+import bg.tu_varna.si.rentacarapp.Contracts;
 import bg.tu_varna.si.rentacarapp.R;
 import bg.tu_varna.si.rentacarapp.service.ApiService;
 import bg.tu_varna.si.rentacarapp.service.CompanyId;
@@ -56,7 +60,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@RequiresApi(api = Build.VERSION_CODES.O)
 public class ContractNew extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+    public static final String DATE_PATTERN = "dd/MM/yyyy";
+
+    private static final DateTimeFormatter dtf = DateTimeFormatter.ofPattern(DATE_PATTERN);
+
+
     private final Calendar calendar = Calendar.getInstance();
     ApiService apiService;
     ArrayAdapter<Client> clientAdapter;
@@ -87,6 +97,8 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
     CheckBox transmissionDamage;
     double contractPrice;
     long contractId;
+    private Handler handler = new Handler();
+    Contract contract;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,24 +115,20 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
         endEditText = findViewById(R.id.end_date);
         endReportEditText = findViewById(R.id.end_status);
         priceEditText = findViewById(R.id.final_price);
-        insideDamage = findViewById(R.id.check_contract_insideDamage);
-        outsideDamage = findViewById(R.id.check_contract_outsideDamage);
-        engineDamage = findViewById(R.id.check_contract_engineDamage);
-        transmissionDamage = findViewById(R.id.check_contract_TransmissionDamage);
+
 
         FloatingActionButton fabCheck = findViewById(R.id.fab_contract_check);
         FloatingActionButton fabBack = findViewById(R.id.fab_contract_back);
         apiService = RetrofitService.cteateService(ApiService.class);
         Intent intent = getIntent();
-        contractId  = intent.getLongExtra("contractId", -1);
-
+        contractId = intent.getLongExtra("contractId", -1);
 
         getOperator(userId);
 
         carViewModel = new ViewModelProvider(this).get(CarViewModel.class);
-        carViewModel.init(CompanyId.getCompanyId());
+        carViewModel.available(CompanyId.getCompanyId());
         Log.d("CompanyId: ", String.valueOf(CompanyId.getCompanyId()));
-        carViewModel.getAllCarsObservable().observe(this, response -> {
+        carViewModel.getAllAvailableCarsObservable().observe(this, response -> {
             cars.clear();
             cars.addAll(response.getCars());
             Log.d("Cars count: ", String.valueOf(cars.size()));
@@ -142,20 +150,21 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
             Log.d("Clients count: ", String.valueOf(cars.size()));
             clientAdapter.notifyDataSetChanged();
         });
+
         clientAdapter = new ArrayAdapter<Client>(this, android.R.layout.simple_list_item_1, clients);
         clientSpinner.setAdapter(clientAdapter);
         clientSpinner.setOnItemSelectedListener(this);
-
 
         startEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePickerDialog dpd = new DatePickerDialog(ContractNew.this,
                         new DatePickerDialog.OnDateSetListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int day) {
                                 calendar.set(year, month, day);
-                                String date = new SimpleDateFormat("MM/dd/yyyy").format(calendar.getTime());
+                                String date = new SimpleDateFormat(DATE_PATTERN).format(calendar.getTime());
                                 startEditText.setText(date);
                             }
                         }, year, month, dayOfMonth);
@@ -163,54 +172,118 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
             }
         });
 
+
         endEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 DatePickerDialog dpd = new DatePickerDialog(ContractNew.this,
                         new DatePickerDialog.OnDateSetListener() {
+                            @RequiresApi(api = Build.VERSION_CODES.O)
                             @Override
                             public void onDateSet(DatePicker view, int year, int month, int day) {
                                 calendar.set(year, month, day);
-                                String date = new SimpleDateFormat("MM/dd/yyyy").format(calendar.getTime());
+                                String date = new SimpleDateFormat(DATE_PATTERN).format(calendar.getTime());
                                 endEditText.setText(date);
+
+
                             }
                         }, year, month, dayOfMonth);
                 dpd.show();
             }
         });
-        fabCheck.setOnClickListener(new View.OnClickListener() {
+
+        /////////////
+        TextWatcher textWatcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                calculatePrice();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        };
+        startEditText.addTextChangedListener(textWatcher);
+        endEditText.addTextChangedListener(textWatcher);
+
+
+        if (contractId != -1) {
+            setTitle("Edit contract");
+            getContract(CompanyId.getCompanyId(), contractId);
+            fabCheck.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+//          TODO: putContract();
+                    handler.postDelayed(updateTimeTask, 1500);
+                }
+            });
+        } else {
+            setTitle("New contract");
+            fabCheck.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (startEditText == null || endEditText == null) {
+                        Toast.makeText(ContractNew.this, "Input valid start and end date!", Toast.LENGTH_LONG).show();
+                    } else {
+                        try {
+                            createContract(CompanyId.getCompanyId(), fetchContractInfo());
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        handler.postDelayed(updateTimeTask, 1500);
+
+
+                    }
+
+                }
+            });
+
+            endReportEditText.setEnabled(false);
+            insideDamage.setEnabled(false);
+            outsideDamage.setEnabled(false);
+            engineDamage.setEnabled(false);
+            transmissionDamage.setEnabled(false);
+
+        }
+        fabBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    postContract(CompanyId.getCompanyId(), fetchContractInfo());
-
-
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
+                setResult(RESULT_OK);
+                finish();
             }
         });
 
-
-    }
-
-
-    public void createContract(long companyId, Contract contract) {
-        Call<bg.tu.varna.si.model.Contract> call = apiService.createContract(JwtHandler.getJwt(), CompanyId.getCompanyId(), contract);
-        call.enqueue(new Callback<Contract>() {
+        insideDamage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onResponse(Call<Contract> call, Response<Contract> response) {
-                if (response.isSuccessful()) {
-                    Toast.makeText(ContractNew.this, "Client updated!", Toast.LENGTH_LONG).show();
-                }
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                calculatePrice();
             }
-
+        });
+        outsideDamage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onFailure(Call<Contract> call, Throwable t) {
-
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                calculatePrice();
+            }
+        });
+        transmissionDamage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                calculatePrice();
+            }
+        });
+        engineDamage.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                calculatePrice();
             }
         });
     }
+
 
     public void getOperator(long operatorId) {
         Call<User> call = apiService.getUser(JwtHandler.getJwt(), MainActivity.userId);
@@ -245,9 +318,12 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
         if (parent.getId() == R.id.contract_client) {
             selectedClient = (Client) clientSpinner.getSelectedItem();
             Log.d("--------Client -----", String.valueOf(selectedClient.getId()));
+
         } else if (parent.getId() == R.id.contract_car) {
             selectedCar = (Car) carSpinner.getSelectedItem();
             Log.d("------Car -----: ", String.valueOf(selectedCar.getCarId()));
+
+            calculatePrice();
 
         }
     }
@@ -257,7 +333,7 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
 
     }
 
-    public void postContract(long companyId, Contract contract) {
+    public void createContract(long companyId, Contract contract) {
         Call<Contract> call = apiService.createContract(JwtHandler.getJwt(), companyId, contract);
         call.enqueue(new Callback<Contract>() {
             @Override
@@ -275,11 +351,45 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
         });
     }
 
+    public void getContract(long companyId, long contractId) {
+        Call<Contract> call = apiService.getContract(JwtHandler.getJwt(), companyId, contractId);
+        call.enqueue(new Callback<Contract>() {
+            @Override
+            public void onResponse(Call<Contract> call, Response<Contract> response) {
+                operatorTextView.setText(response.body().getOperator().getFirstName() + " " +
+                        response.body().getOperator().getLastName());
+                priceEditText.setText(String.valueOf(response.body().getPrice()));
+                startReportEditText.setText(response.body().getStatusOnStart().getDescription());
+                endReportEditText.setText(response.body().getStatusOnEnd().getDescription());
+                Car car = response.body().getCar();
+                cars.add(car);
+                carAdapter.notifyDataSetChanged();
+                Client client = response.body().getClient();
+                if (client != null) {
+                    int spinnerPosition = clientAdapter.getPosition(client);
+                    clientSpinner.setSelection(spinnerPosition);
+                }
+
+                String startDate = new SimpleDateFormat(DATE_PATTERN).format(response.body().getStart());
+                startEditText.setText(startDate);
+                String endDate = new SimpleDateFormat(DATE_PATTERN).format(response.body().getEnd());
+                endEditText.setText(endDate);
+
+
+            }
+
+            @Override
+            public void onFailure(Call<Contract> call, Throwable t) {
+                Log.d("Get contract error:", t.getMessage());
+            }
+        });
+    }
+
     public Contract fetchContractInfo() throws ParseException {
         Contract contract = new Contract();
         contract.setOperator(user);
         contract.setCar(selectedCar);
-        Log.d("----Selected client:", String.valueOf(selectedClient));
+        Log.d("----Selected car:", String.valueOf(selectedCar));
         contract.setClient(selectedClient);
         Log.d("----Selected client:", String.valueOf(selectedClient));
 
@@ -289,21 +399,46 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
         carStatus.setDescription(startReportEditText.getText().toString());
         contract.setStatusOnStart(carStatus);
 
-        Date startDate = new SimpleDateFormat("MM/dd/yyyy").parse(startEditText.getText().toString());
+        Date startDate = new SimpleDateFormat(DATE_PATTERN).parse(startEditText.getText().toString());
         contract.setStart(startDate);
 
-        Date endDate = new SimpleDateFormat("MM/dd/yyyy").parse(endEditText.getText().toString());
+        Date endDate = new SimpleDateFormat(DATE_PATTERN).parse(endEditText.getText().toString());
         contract.setEnd(endDate);
-        contractPrice = calculatePrice();
         Log.d("Car price:", String.valueOf(contractPrice));
-        contract.setPrice(contractPrice);
+        contract.setPrice(Double.parseDouble(priceEditText.getText().toString()));
+        contract.setActive(true);
 
         return contract;
     }
 
-    public Double calculatePrice() {
+    public void calculatePrice() {
+
+        if (selectedCar == null) {
+            priceEditText.setText("0");
+            return;
+        }
+
         carPrice = selectedCar.getPriceForDay();
+        double initialPrice = 0;
         Log.d("Base car price: ", String.valueOf(carPrice));
+
+        LocalDate startDate = getDate(startEditText.getText().toString());
+        if (startDate == null) {
+            priceEditText.setText("0");
+            return;
+        }
+
+        LocalDate endDate = getDate(endEditText.getText().toString());
+        if (endDate == null) {
+            priceEditText.setText(String.valueOf(carPrice));
+            initialPrice = carPrice;
+            priceEditText.setText(String.valueOf(initialPrice));
+            return;
+        }
+
+        long duration = ChronoUnit.DAYS.between(startDate, endDate);
+
+        initialPrice = duration * carPrice;
 
         double insideDamagePrice = 0;
         double outsideDamagePrice = 0;
@@ -311,22 +446,38 @@ public class ContractNew extends AppCompatActivity implements AdapterView.OnItem
         double transmissionDamagePrice = 0;
 
         if (insideDamage.isChecked()) {
-            insideDamagePrice = carPrice * 20;
+            insideDamagePrice = initialPrice * 20;
         }
         if (outsideDamage.isChecked()) {
-            outsideDamagePrice = carPrice * 30;
+            outsideDamagePrice = initialPrice * 30;
 
         }
         if (transmissionDamage.isChecked()) {
-            transmissionDamagePrice = carPrice * 50;
+            transmissionDamagePrice = initialPrice * 50;
         }
 
         if (engineDamage.isChecked()) {
-            engineDamagePrice = carPrice * 100;
+            engineDamagePrice = initialPrice * 100;
         }
 
-        return contractPrice = carPrice + insideDamagePrice + outsideDamagePrice + engineDamagePrice + transmissionDamagePrice;
+        double contractPrice = initialPrice + insideDamagePrice + outsideDamagePrice + engineDamagePrice + transmissionDamagePrice;
+        priceEditText.setText(String.valueOf(contractPrice));
+
     }
 
+    private LocalDate getDate(String dateToParse) {
+        try {
+            return LocalDate.parse(dateToParse, dtf);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    private Runnable updateTimeTask = new Runnable() {
+        public void run() {
+            Intent intent = new Intent(ContractNew.this, Contracts.class);
+            startActivity(intent);
+        }
+    };
 
 }

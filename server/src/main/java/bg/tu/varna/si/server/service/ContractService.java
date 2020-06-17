@@ -7,8 +7,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import bg.tu.varna.si.model.Car;
 import bg.tu.varna.si.model.Contract;
 import bg.tu.varna.si.model.ContractList;
+import bg.tu.varna.si.server.db.entity.CarEntity;
 import bg.tu.varna.si.server.db.entity.CarStatusEntity;
 import bg.tu.varna.si.server.db.entity.CompanyEntity;
 import bg.tu.varna.si.server.db.entity.ContractEntity;
@@ -35,16 +37,16 @@ public class ContractService extends BaseService {
 
 	@Autowired
 	private CompanyRepository companyRepository;
+	
 
-	public Optional<ContractList> getAllContracts(long companyId) {
 
-		Optional<CompanyEntity> companyEntity = companyRepository.findById(companyId);
+	public ContractList getAllContracts(long companyId) {
 
-		if (companyEntity.isPresent()) {
+		List<ContractEntity> contractEntities = contractRepository.findByCompanyId(companyId);
+
 
 			ContractList contractsList = new ContractList();
 
-			List<ContractEntity> contractEntities = companyEntity.get().getContracts();
 			List<Contract> contracts = new LinkedList<Contract>();
 			for (ContractEntity entity : contractEntities) {
 				contracts.add(fromEntity(entity));
@@ -52,10 +54,8 @@ public class ContractService extends BaseService {
 
 			contractsList.setContracts(contracts);
 
-			return Optional.of(contractsList);
-		}
-
-		return Optional.empty();
+			return contractsList;
+		
 	}
 
 	public Optional<Contract> getContractById(Long id) {
@@ -83,7 +83,10 @@ public class ContractService extends BaseService {
 			return Optional.empty();
 		} else {
 			ContractEntity entity = new ContractEntity();
-			entity.setCar(carRepository.findByRegNumber(contract.getCar().getRegNumber()));
+			CarEntity contractedCar = carRepository.findByRegNumber(contract.getCar().getRegNumber());
+			entity.setCar(contractedCar);
+			contractedCar.setAvailable(false);
+			
 			entity.setClient(clientRepository.findByDriversLicense(contract.getClient().getDriversLicense()));
 			entity.setStart(contract.getStart());
 			entity.setEnd(contract.getEnd());
@@ -92,9 +95,12 @@ public class ContractService extends BaseService {
 			statusOnStart.setStatus(contract.getStatusOnStart().getStatus());
 			statusOnStart.setDescription(contract.getStatusOnStart().getDescription());
 			entity.setStatusOnStart(statusOnStart);
-			
+			entity.setCompanyId(contract.getCompanyId());
+			entity.setActive(contract.isActive());
 			entity.setPrice(contract.getPrice());
 
+			
+			
 			return Optional.of(fromEntity(contractRepository.save(entity)));
 		}
 
@@ -123,9 +129,11 @@ public class ContractService extends BaseService {
 		statusOnEnd.setStatus(contract.getStatusOnEnd().getStatus());
 		statusOnEnd.setDescription(contract.getStatusOnEnd().getDescription());
 		entity.setStatusOnEnd(statusOnEnd);
+		entity.setActive(contract.isActive());
 
 		return Optional.of(fromEntity(contractRepository.save(entity)));
 	}
+	
 
 	public void deleteContractEntity(Long id) {
 

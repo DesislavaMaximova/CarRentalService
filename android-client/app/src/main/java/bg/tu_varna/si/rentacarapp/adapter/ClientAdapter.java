@@ -48,8 +48,6 @@ public class ClientAdapter extends RecyclerView.Adapter<ClientAdapter.ClientView
     public void onBindViewHolder(@NonNull ClientViewHolder holder, int position) {
         Client currentClient = clients.get(position);
         String name = currentClient.getFirstName() + " " + currentClient.getLastName();
-
-
         String phone = currentClient.getTelephone();
         float rating = currentClient.getRating();
 

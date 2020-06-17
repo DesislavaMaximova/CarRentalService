@@ -45,5 +45,21 @@ public class CarRepository {
         return carListMutableLiveData;
     }
 
+    public LiveData<CarList> getAvailableCars(long companyId) {
+        MutableLiveData<CarList> availableListMutableLiveData = new MutableLiveData<>();
+        apiService.getAvailableCars(JwtHandler.getJwt(), companyId).enqueue(new Callback<CarList>() {
+            @Override
+            public void onResponse(Call<CarList> call, Response<CarList> response) {
+                availableListMutableLiveData.setValue(response.body());
+            }
+
+            @Override
+            public void onFailure(Call<CarList> call, Throwable t) {
+                availableListMutableLiveData.setValue(null);
+                Log.d("Error: ", t.getMessage());
+            }
+        });
+        return availableListMutableLiveData;
+    }
 
 }

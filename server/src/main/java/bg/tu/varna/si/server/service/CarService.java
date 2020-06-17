@@ -118,4 +118,18 @@ public class CarService extends BaseService {
 		carRepository.deleteById(id);
 	}
 
+	public CarList getAllAvailable(long companyId, Boolean available) {
+		
+		available = true;
+
+		List <CarEntity> cars = carRepository.findByCompanyIdAndAvailable(companyId, available);
+
+			CarList availableCars = new CarList();
+			for (CarEntity car : cars) {
+				availableCars.getCars().add(fromEntity(car));
+		
+			}
+			return availableCars;
+	}
+
 }

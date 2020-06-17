@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_logout"
+        android:icon="@drawable/ic_baseline_exit_to_app_24"
+        android:title="Log out"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_admin"
+        android:title="Administrator"
+        app:showAsAction="never" >
+        <menu>
+            <item
+                android:id="@+id/menu_create_company"
+                android:title="Create company"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_companies"
+                android:title="Show companies"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+    <item
+        android:id="@+id/menu_operator"
+        android:title="Operator"
+        app:showAsAction="never" >
+        <menu>
+            <item
+                android:id="@+id/menu_cars"
+                android:title="Cars"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_clients"
+                android:title="Clients"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_contracts"
+                android:title="Contracts"
+                app:showAsAction="never" />
+            <item
+                android:id="@+id/menu_queries"
+                android:title="Queries"
+                app:showAsAction="never" />
+        </menu>
+    </item>
+
+</menu>

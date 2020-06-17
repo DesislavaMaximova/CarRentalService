@@ -20,7 +20,6 @@ import retrofit2.Response;
 
 public class ContractRepository {
     private ApiService apiService;
-
     private static ContractRepository contractRepository;
 
     public ContractRepository() {
@@ -36,10 +35,11 @@ public class ContractRepository {
 
     public LiveData<ContractList> getAllContracts(long companyId) {
         MutableLiveData<ContractList> contractListMutableLiveData = new MutableLiveData<>();
-        apiService.getAllContracts(JwtHandler.getJwt(), CompanyId.getCompanyId()).enqueue(new Callback<ContractList>() {
+        apiService.getAllContracts(JwtHandler.getJwt(),companyId).enqueue(new Callback<ContractList>() {
             @Override
             public void onResponse(Call<ContractList> call, Response<ContractList> response) {
                 contractListMutableLiveData.setValue(response.body());
+                Log.d("Contracts", response.body().toString());
             }
 
             @Override

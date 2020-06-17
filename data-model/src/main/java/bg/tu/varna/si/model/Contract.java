@@ -20,9 +20,11 @@ public class Contract {
 
 	private CarStatus statusOnEnd;
 
-	private long companyId;
+	private long  companyId;
 	
 	private double price;
+	
+	private boolean active;
 
 	
 	public Contract() {
@@ -105,6 +107,10 @@ public class Contract {
 	}
 
 
+
+
+
+
 	public long getCompanyId() {
 		return companyId;
 	}
@@ -127,6 +133,17 @@ public class Contract {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+	
+
+
+	public boolean isActive() {
+		return active;
+	}
+
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 
@@ -153,6 +170,8 @@ public class Contract {
 		builder.append(companyId);
 		builder.append(", price=");
 		builder.append(price);
+		builder.append(", active=");
+		builder.append(active);
 		builder.append("]");
 		return builder.toString();
 	}

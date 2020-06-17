@@ -1,6 +1,7 @@
 package bg.tu.varna.si.server.db.entity;
 
 import java.util.Date;
+import java.util.Optional;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -28,6 +29,8 @@ public class ContractEntity {
 
 	@OneToOne(fetch = FetchType.LAZY)
 	private CarEntity car;
+	
+	private long companyId;
 
 	private Date start;
 	
@@ -40,6 +43,9 @@ public class ContractEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade=CascadeType.ALL)
     @JoinColumn(name = "status_on_end_id", referencedColumnName = "id")
 	private CarStatusEntity statusOnEnd;
+    
+    
+    private boolean active;
 	
 	private double price;
 
@@ -113,6 +119,22 @@ public class ContractEntity {
 
 	public void setPrice(double price) {
 		this.price = price;
+	}
+
+	public long getCompanyId() {
+		return companyId;
+	}
+
+	public void setCompanyId(long companyId) {
+		this.companyId = companyId;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	

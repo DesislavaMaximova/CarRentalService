@@ -42,7 +42,7 @@ public class Bootstrap implements CommandLineRunner {
 //		operator.setRole(Role.OPERATOR);
 //		
 //		repository.save(operator);
-//		
+////		
 	}
 
 }

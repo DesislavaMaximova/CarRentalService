@@ -19,6 +19,7 @@ import bg.tu.varna.si.model.ClientList;
 import bg.tu.varna.si.model.Contract;
 import bg.tu.varna.si.model.ContractList;
 import bg.tu.varna.si.model.User;
+import bg.tu.varna.si.server.repository.CarRepository;
 import bg.tu.varna.si.server.service.CarService;
 import bg.tu.varna.si.server.service.ClientsService;
 import bg.tu.varna.si.server.service.ContractService;
@@ -105,7 +106,7 @@ public class ApiController {
 	}
 	
 	@GetMapping("/{companyId}/contracts")
-	public ResponseEntity<Optional<ContractList>> getAllContracts(
+	public  ResponseEntity<ContractList> getAllContracts(
 			@PathVariable ("companyId") long companyId){
 		return ResponseEntity.ok().body(contractService.getAllContracts(companyId));
 	} 
@@ -114,6 +115,23 @@ public class ApiController {
 			@PathVariable ("companyId") long companyId, 
 			@RequestBody Contract contract){
 		return ResponseEntity.ok().body(contractService.createContract(companyId, contract));
+	}
+	@GetMapping("/{companyId}/queries/availableCars")
+	public ResponseEntity<CarList> getAvailableCars (
+			@PathVariable ("companyId") long companyId) {
+		return ResponseEntity.ok().body(carService.getAllAvailable(companyId, true));
+	}
+	@GetMapping("/{companyId}/contracts/{contractId}")
+	public ResponseEntity<Optional<Contract>> getContract(@PathVariable ("companyId") long companyId,
+			@PathVariable ("contractId") long contractId){
+		return ResponseEntity.ok().body(contractService.getContractById(contractId));
+		
+	}
+	@PutMapping("/{companyId}/contracts/{contractId}")
+	public ResponseEntity<Optional<Contract>> updateContract(@PathVariable ("companyId") long companyId,
+			@PathVariable ("contractId") long contractId,
+			@RequestBody Contract contract){
+		return ResponseEntity.ok().body(contractService.updateContract(contract));
 	}
 }
 

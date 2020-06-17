@@ -12,7 +12,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.ProblemReport"></activity>
+        <activity android:name=".activities.UpdateContract"></activity>
+        <activity android:name=".activities.Statistics" />
+        <activity android:name=".activities.ClientsByRating" />
+        <activity android:name=".activities.CarRentalHistory" />
+        <activity android:name=".activities.AvailableCars" />
+        <activity android:name=".activities.ProblemReport" />
         <activity android:name=".activities.ContractNew" />
         <activity android:name=".activities.CarNew" />
         <activity android:name=".activities.Client_new" />

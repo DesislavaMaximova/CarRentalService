@@ -74,6 +74,8 @@ public abstract class BaseService {
 		contract.setStatusOnEnd(fromEntity(entity.getStatusOnEnd()));
 		contract.setId(entity.getId());
 		contract.setPrice(entity.getPrice());
+		contract.setCompanyId(entity.getCompanyId());
+		contract.setActive(entity.isActive());
 
 		return contract;
 	}

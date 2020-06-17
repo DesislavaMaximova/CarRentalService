@@ -1,10 +1,13 @@
 package bg.tu_varna.si.rentacarapp.activities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -41,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private Button login;
     AuthService authService;
     private AuthenticationRequest credentials;
+    Toolbar toolbar;
 
 
     @Override
@@ -50,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
         login = findViewById(R.id.button_submit);
         editUsername = findViewById(R.id.edit_username);
         editPassword = findViewById(R.id.edit_pass);
+
 
 //        username.setText("");
 //        password.setText("");
@@ -91,7 +96,11 @@ public class MainActivity extends AppCompatActivity {
             });
         });
 
+        }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
     }
-
-
 }

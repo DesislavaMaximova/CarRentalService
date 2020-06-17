@@ -4,11 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="bg.tu_varna.si.rentacarapp.activities.LogIn"
     android:orientation="vertical"
-    android:padding="16dp"
-
-    >
+    android:padding="16dp">
 
     <ImageView
         android:id="@+id/imageViewCover1"

@@ -17,7 +17,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/contract_operator"
+                android:id="@+id/contract_operator_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -33,8 +33,8 @@
                 android:layout_marginTop="10dp"
                 android:text="Car: " />
 
-            <Spinner
-                android:id="@+id/contract_car"
+            <EditText
+                android:id="@+id/contract_car_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -47,8 +47,8 @@
                 android:layout_marginTop="10dp"
                 android:text="Client: " />
 
-            <Spinner
-                android:id="@+id/contract_client"
+            <EditText
+                android:id="@+id/contract_client_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -56,7 +56,7 @@
                 />
 
             <EditText
-                android:id="@+id/start_date"
+                android:id="@+id/start_date_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -69,7 +69,7 @@
                 android:inputType="date"/>
 
             <EditText
-                android:id="@+id/start_report"
+                android:id="@+id/start_report_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -79,7 +79,7 @@
                 />
 
             <EditText
-                android:id="@+id/end_date"
+                android:id="@+id/end_date_update"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -91,59 +91,59 @@
                 android:hint="End day"
                 android:inputType="date"/>
 
-<!--            <EditText-->
-<!--                android:id="@+id/end_status"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginLeft="10dp"-->
-<!--                android:layout_marginTop="10dp"-->
-<!--                android:layout_marginRight="10dp"-->
-<!--                android:hint="End day status"-->
-<!--              />-->
-
-
-
-<!--            <LinearLayout-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:layout_marginTop="10dp">-->
-
-<!--                <CheckBox-->
-<!--                    android:id="@+id/check_contract_outsideDamage"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Car body damages" />-->
-<!--                <CheckBox-->
-<!--                    android:id="@+id/check_contract_insideDamage"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Interior damage" />-->
-<!--            </LinearLayout>-->
-<!--            <LinearLayout-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:orientation="horizontal"-->
-<!--                android:layout_marginTop="10dp">-->
-
-
-
-<!--                <CheckBox-->
-<!--                    android:id="@+id/check_contract_engineDamage"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Engene damage" />-->
-
-<!--                <CheckBox-->
-<!--                    android:id="@+id/check_contract_TransmissionDamage"-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="wrap_content"-->
-<!--                    android:text="Transmission damage"/>-->
-
-
-<!--            </LinearLayout>-->
             <EditText
-                android:id="@+id/final_price"
+                android:id="@+id/end_status_update"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:hint="End day status"
+                />
+
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+                <CheckBox
+                    android:id="@+id/check_contract_outsideDamage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Car body damages" />
+                <CheckBox
+                    android:id="@+id/check_contract_insideDamage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Interior damage" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10dp">
+
+
+
+                <CheckBox
+                    android:id="@+id/check_contract_engineDamage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Engene damage" />
+
+                <CheckBox
+                    android:id="@+id/check_contract_TransmissionDamage"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Transmission damage"/>
+
+
+            </LinearLayout>
+            <EditText
+                android:id="@+id/final_price_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
@@ -154,28 +154,28 @@
 
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_contract_check"
+                android:id="@+id/fab_contract_check_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end|bottom"
                 android:layout_margin="6dp"
                 android:src="@drawable/ic_check"></com.google.android.material.floatingactionbutton.FloatingActionButton>
 
-<!--            <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                android:id="@+id/fab_contract_finish"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="end|bottom"-->
-<!--                android:layout_margin="6dp"-->
-<!--                android:src="@drawable/ic_show_all_foreground"-->
-<!--                app:fabSize="normal"-->
-<!--                app:maxImageSize="35dp">-->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_contract_finish_update"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end|bottom"
+                android:layout_margin="6dp"
+                android:src="@drawable/ic_show_all_foreground"
+                app:fabSize="normal"
+                app:maxImageSize="35dp">
 
-<!--            </com.google.android.material.floatingactionbutton.FloatingActionButton>-->
+            </com.google.android.material.floatingactionbutton.FloatingActionButton>
 
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_contract_back"
+                android:id="@+id/fab_contract_back_update"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"

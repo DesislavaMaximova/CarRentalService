@@ -42,7 +42,7 @@ public interface ApiService {
 
     @GET("/api/{companyId}/contracts/{contractId}")
     Call<Contract> getContract(@Header("Authorization") String bearerToken, @Path("companyId") long companyId,
-                                   @Path("contractId") long contractId);
+                               @Path("contractId") long contractId);
 
     @POST("/api/{companyId}/contracts")
     Call<Contract> createContract(@Header("Authorization") String bearerToken,
@@ -82,4 +82,8 @@ public interface ApiService {
     @GET("/api/users/{userId}")
     Call<User> getUser(@Header("Authorization") String bearerToken,
                        @Path("userId") long idEmployee);
+
+    @GET("/api/{companyId}/queries/availableCars")
+    Call<CarList> getAvailableCars(@Header("Authorization") String bearerToken,
+                                   @Path("companyId") long companyId);
 }
